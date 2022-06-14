@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+        <fieldset>
+            <legend>배송정보</legend>
+            <label for="userName">name</label>
+            <input type="text" name="userName" id="userName" placeholder="input name" required><br>
+            <label for="address">address</label>
+            <input type="text" name="address" id="userName" required><br>
+            <label for="email">email</label>
+            <input type="text" name="email" id="userName"><br>
+            <label for="phone">phone</label>
+            <input type="tel" name="phone" id="phone" placeholder="01012345678"><br>
+            <br>
+            <label for="orderDate">Date</label>
+            <input type="date" name="orderDate" id="orderDate">(최소 3일 이후)<br>
+
+            <label for="contents">주의사항</label>
+            <textarea name="contents" id="contents" cols="30" rows="10"></textarea>
+            <button>send</button>
+            <br>
+
+            <select name="sel" id="sel">
+                <option value="1">3kg</option>
+                <option value="2" selected>6kg</option>
+                <option value="3">9kg</option>
+                <option value="4">12kg</option>
+            </select>
+
+        </fieldset>
+    </form>
+</body>
+</html>
