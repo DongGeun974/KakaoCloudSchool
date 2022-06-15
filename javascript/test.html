@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        x : <input type="text" name="" id="xvalue">
+        y : <input type="text" name="" id="yvalue">
+        <button onclick=oper(1)>+</button>
+        <button onclick=oper(2)>-</button>
+        <button onclick=oper(3)>*</button>
+        <button onclick=oper(4)>/</button>
+        <p>값 : <span id = "result"></span></p>
+    </body>
+</html>
+
+<script>
+    function oper(i)
+    {
+
+        var x = parseInt(document.getElementById("xvalue").value)
+        var y = parseInt(document.getElementById("yvalue").value)
+        var result = document.getElementById("result")
+        if (i == 1)
+        {
+            result.innerHTML = (x+y)
+        }else if(i== 2)
+        {
+            result.innerHTML = (x-y)
+        }else if(i== 3)
+        {
+            result.innerHTML = (x*y)
+        }else if(i== 4)
+        {
+            result.innerHTML =(x/y)
+        }
+    }
+</script>
