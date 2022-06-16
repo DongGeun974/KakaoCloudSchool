@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+
+<script>
+    let person = {"name" : "hong", "age": 18};
+    console.log(person["name"])
+    console.log(person.age)
+
+    person.address = "seoul"
+    person["phone"] = "11111-1111-1111"
+    console.log(person);
+
+
+    let personList = 
+    [
+        {"name" : "hong", "age" : 12, "phone" : "010-1011-1111", "address" : "seoul"},
+        {"name" : "gil", "age" : 112, "phone" : "010-2222-1111", "address" : "seoul"},
+        {"name" : "dong", "age" : 512, "phone" : "010-3333-1111", "address" : "seoul"},
+    ]
+    for(i = 0; i<personList.length; i++)
+    {
+        console.log(`${personList[i].name} ${personList[i].age} ${personList[i].address} ${personList[i].phone}`)
+    }
+    personList.forEach((item, index)=>{
+        console.log(item.name, item.age, item.address, item.phone)
+    })
+</script>
