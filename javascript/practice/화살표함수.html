@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+
+<script>
+    let stdArray=[
+        {"class" : "1", "name" : "A", "kor" : 90, "eng" : 80, "mat" : 90},
+        {"class" : "2", "name" : "B", "kor" : 70, "eng" : 20, "mat" : 80},
+        {"class" : "1", "name" : "C", "kor" : 20, "eng" : 30, "mat" : 60},
+        {"class" : "2", "name" : "D", "kor" : 60, "eng" : 50, "mat" : 40},
+        {"class" : "1", "name" : "E", "kor" : 50, "eng" : 20, "mat" : 10},
+    ]
+
+    // classs가 1인 학생들과 2인 학샏들 분리하기
+    // let funct = (arr) => {
+    //     arr.forEach(element => {
+    //        if (element.class == "1")
+    //        {
+    //         console.log(element)
+    //        } 
+    //     });
+
+    //     arr.forEach(element => {
+    //        if (element.class == "2")
+    //        {
+    //         console.log(element)
+    //        } 
+    //     });
+    // }
+
+    // funct(stdArray)
+
+    console.log(stdArray.filter(a=>a.class==='1'))
+    console.log(stdArray.filter(a=>a.class==='2'))
+
+    //총점하고 평균 계산해서 넣기
+
+    stdArray.forEach(element => {
+        element.sum = element.eng+element.kor+element.mat;
+        element.mean = element.sum/3
+    });
+
+    console.log(stdArray);
+
+
+    let {name, kor} = stdArray[0];
+    console.log(name, kor);
+
+
+    // stdArray.filter
+    // stdArray.map
+    // stdArray.forEach
+
+    let numArray = [124,1, 4, 6,7,8,-1, 21, 52 ,37 ,3]
+    numArray.sort((a,b)=>{return b-a})
+    console.log(numArray)
+
+    stdArray.sort((a,b)=>{return b.sum-a.sum})
+    console.log(stdArray)
+
+    stdArray.sort((a,b)=>{return a.sum - b.sum})
+    console.log(stdArray)
+
+
+
+
+
+    tmp = numArray.map((object, i)=>{
+        console.log(object, i);
+        return object
+    })
+
+    console.log(tmp);
+
+    let arr2 = [
+        [1,2,3,4],
+        [5,6,7,8],
+        [9,10,11,12]
+    ];
+    arr2.forEach((arr, index)=>{
+        console.log(arr, index)
+    })
+
+    arr2.forEach((arr, index)=>{
+        arr.forEach((item,i)=>
+        {
+            console.log(item)
+        })
+    })
+
+    //첫번째 배열에서 2곱하기. 두번쨰 배열에서 3곱하기, 세번쨰는 4곱하기
+    //map함수 사용
+    let t = arr2.map((arr, i)=>{
+        let tmp = arr.map((item, idx)=>{
+            // item = item*(i+2)
+            // console.log(item*(i+1))
+            return item*(i+2)
+        })
+        return tmp
+    })
+
+    console.log(t)
+
+    result = numArray.find(x=>x%2==0)
+    console.log(result, typeof(result))
+
+    result = numArray.filter(x=>x%2==0)
+    console.log(result, typeof(result))
+
+    
+</script>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+
+<script>
+    var arr = [9, 2, 8, 5, 7];
+    var sum = 0;
+
+    sum = arr.reduce((pre, curr)=>
+    {
+        console.log('pre : ' , pre);
+        console.log('curr : ', curr);
+        return pre+curr;
+    }, 10)
+    console.log(sum);
+
+    //짝수의 개수를 세어보자
+    cnt = arr.reduce( (pre, curr) =>
+    {
+        if (curr%2==0)
+        {
+            return pre = pre+1;
+        }
+        else
+        {
+            return pre;
+        }
+    },0)
+    console.log(cnt);
+
+    let words = ['school', 'rain', "raindow", "sales", "marketing"];
+    tmp  = words.reduce((prev, curr)=>{
+        return prev= prev+ " " + curr;
+    })
+    console.log(tmp)
+
+</script>
