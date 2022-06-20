@@ -9,13 +9,13 @@ let promise = new Promise(function(resolve, reject){
         {
             s+=i;
         }
-        resolve(s);
+        resolve(s);     // resolve의 함수에 전달되는 값이 then 구문의 콜백함수의 매개변수로 전달
     }, 1000);
 
 }).then((val)=>{
     console.log(val)
 }).catch((error)=>{
-    console.log(error)
+    console.log(error)  //reject("error")
 }).finally(()=>{
     console.log("----------------------end----------------------")
 })

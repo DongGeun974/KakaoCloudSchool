@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        button{
+            width: 200px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h2>이벤트 리스너를 이용해 이벤트 핸들러 붙이기</h2>
+    <button type="button" id="btnPress">누르세요</button>
+</body>
+</html>
+
+<script>
+    let btnPress = document.querySelector("#btnPress");
+    let originalColor;
+
+    // 콜백함수의 첫번째 매개변수가 이벤트 발생시킨 객체에 대한 참조
+    btnPress.addEventListener("mouseover", function(e){
+        console.log(e.target)
+        console.log(e.target.id)
+        originalColor = e.target.style.backgroundColor
+        e.target.style.backgroundColor = "magenta"
+    })
+
+    btnPress.addEventListener("mouseout", function(e){
+        e.target.style.backgroundColor = originalColor
+    })
+</script>

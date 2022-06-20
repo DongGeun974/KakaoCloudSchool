@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table style="width: 70%;">
+        <thead>
+            <tr>
+                <th>품목</th>
+                <th>수량</th>
+                <th>단가</th>
+            </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+    </table>
+</body>
+</html>
+
+<script>
+    let tbody = document.getElementById("tbody");
+    let data = [
+        {name : "새우깡", count : 2, price : 20000},
+        {name : "몽쉘", count : 12, price : 5000},
+        {name : "오징어집", count : 4, price : 200},
+        {name : "꼬북칩", count : 7, price : 1000},
+        {name : "아침햇살", count : 20, price : 150000},
+    ];
+
+    function loadData()
+    {
+        for(item of data)
+        {
+            let row = tbody.insertRow(tbody.rows.length);
+            
+            let cell1 = row.insertCell(0)
+            let cell2 = row.insertCell(1)
+            let cell3 = row.insertCell(2)
+            cell1.innerHTML = item.name;
+            cell2.innerHTML = item.count;
+            cell3.innerHTML = item.price;   
+        }
+    }
+
+    window.onload=function(){
+        loadData();
+    }
+</script>

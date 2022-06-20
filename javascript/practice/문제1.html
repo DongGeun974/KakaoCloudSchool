@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" name="n" id="i1" value="1">    <br/>
+    <input type="text" name="n" id="i2" value="1">    <br/>
+    <input type="text" name="n" id="i3" value="1">    <br/>
+    <input type="text" name="n" id="i4" value="1">    <br/>
+    <input type="text" name="n" id="i5" value="1">    <br/>
+    <input type="text" name="n" id="i6" value="1">    <br/>
+    <input type="text" name="n" id="i7" value="1">    <br/>
+    ---------------------------------------------------
+    <div id="result"></div>
+    <button type="button" onclick="idAdd()">id</button>
+    <button type="button" onclick="nameAdd()">name</button>
+    
+</body>
+</html>
+
+<script>
+    function idAdd(){
+        s =0;
+        for(i = 1; i<=7; i++)
+        {
+            let inputValue = document.getElementById("i"+i).value; 
+            s = s + parseInt(inputValue);
+        }
+        document.getElementById("result").innerHTML = s;
+    }
+
+    function nameAdd(){
+        s = 0;
+        let n = document.getElementsByName("n")
+        // for(i = 0; i<n.length; i++)
+        // {
+        //     s  = s + parseInt(n[i].value);
+        // }
+
+        n.forEach((item)=>{
+            s+=parseInt(item.value);
+        })
+
+        document.getElementById("result").innerHTML = s;
+    }
+</script>

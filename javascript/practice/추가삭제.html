@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button type="button" onclick="add()">추가</button>
+    <button type="button" onclick="del()">삭제</button>
+    <table style="width: 70%;">
+        <thead>
+            <tr>
+                <th>품목</th>
+                <th>수량</th>
+                <th>단가</th>
+            </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+    </table>
+</body>
+</html>
+
+<script>
+    let tbody = document.getElementById("tbody");
+
+    function add()
+    {
+        console.log("1")
+        let row = tbody.insertRow(tbody.rows.length);
+        
+        let cell1 = row.insertCell(0)
+        let cell2 = row.insertCell(1)
+        let cell3 = row.insertCell(2)
+        cell1.innerHTML = "<input type='text' name='produce_name'>";
+        cell2.innerHTML = "<input type='text' name='produce_count'>";
+        cell3.innerHTML = "<input type='text' name='produce_price'>"
+    }
+    
+    function del(){
+        console.log("2")
+        if (tbody.rows.length >= 1){
+            tbody.deleteRow(tbody.rows.length-1);
+        }
+    }
+
+</script>

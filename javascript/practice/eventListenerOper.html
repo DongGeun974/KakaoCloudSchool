@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    값 1 : <input type="text" name="value1" id="x">
+    값 2 : <input type="text" name="value2" id="y">
+    <br>
+    <button type="button" id="add" value="1">+</button>
+    <button type="button" id="sub" value="2">-</button>
+    <button type="button" id="mul" value="3">*</button>
+    <button type="button" id="div" value="4">/</button>
+    result : <div id="result"></div>
+</body>
+</html>
+<script>
+    
+    
+    document.getElementById("add").addEventListener("click", share);
+    document.getElementById("sub").addEventListener("click", share);
+    document.getElementById("mul").addEventListener("click", share);
+    document.getElementById("div").addEventListener("click", share);
+
+    function share(e){
+        let x = parseInt(document.getElementById("x").value)
+        let y = parseInt(document.getElementById("y").value)    
+        if (e.target.value == 1){
+            document.getElementById("result").innerHTML = x+y;
+        }else if(e.target.value == 2)
+        {
+            document.getElementById("result").innerHTML = x-y;
+        }else if (e.target.value == 3)
+        {
+            document.getElementById("result").innerHTML = x*y;
+        }else
+        {
+            document.getElementById("result").innerHTML = x/y;
+        }
+    }
+</script>

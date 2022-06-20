@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 class="aclass">파랗게</h1>
+    <h1 class="aclass">너</h1>
+    <h1 class="aclass">나</h1>
+
+    <h1 class="bclass">하</h1>
+    <h1 class="bclass">가</h1>
+    <h1 class="bclass">나</h1>
+</body>
+</html>
+
+<script>
+    var aclass = document.getElementsByClassName("aclass");
+    console.log(aclass);4
+    console.log("데이터 개수 : ", aclass.length);
+
+    aclass[0].style.color = "#ff4455";
+    aclass[1].style.color = "#33ff55";
+    aclass[2].style.color = "#0044ff";
+
+    let bclass = document.getElementsByClassName("bclass");
+    let colors = ["#ff0000", "#00ff00", "#0000ff"]
+    for(i=0; i<bclass.length; i++){
+        bclass[i].style.color = colors[i];
+    }
+
+    // 태그 네임
+    let h1 = document.getElementsByTagName("h1");
+    for(i =0; i<h1.length; i++){
+        console.log(h1[i].innerHTML);
+    }
+
+    // querySelector
+    // #id, .class
+    h1= document.querySelectorAll("h1");
+    for(i=0; i<h1.length; i++)
+    {
+        h1[i].style.color = "#0000ff";
+    }
+
+    h1 = document.querySelectorAll(".aclass");
+    for(i=0; i<h1.length; i++)
+    {
+        h1[i].style.color = "magenta";
+    }
+</script>

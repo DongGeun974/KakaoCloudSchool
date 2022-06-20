@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button type="button" id="startBtn">start</button>
+    <button type="button" id="endBtn">end</button>
+    <h1 id="clock"></h1>
+</body>
+</html>
+
+<script>
+    let timerId = null;
+
+    window.onload = function(){
+        displayClock();
+        document.getElementById("startBtn").addEventListener("click", ()=>{
+            if (timerId == null)
+            {
+                timerId = setInterval( displayClock , 1000);
+            }
+        })
+
+        document.getElementById("endBtn").addEventListener("click", ()=>{
+            console.log(timerId)
+            if (timerId!=null)
+            {
+                clearInterval(timerId)
+                console.log(timerId)
+                timerId = null;
+            }
+        })
+        // 만들어진 interval 객체 참조를 반환
+    }
+
+    function displayClock() {
+        var now = new Date();
+        document.getElementById("clock").innerHTML = now.toLocaleTimeString();
+    }
+</script>

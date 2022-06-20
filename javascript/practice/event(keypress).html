@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" name="" id="" onkeypress="inNumber()">
+    <input type="text" name="" id="" oninput="this.value = this.value.replace(/[^0-9]/g, '')"> <br>
+    <input type="number">
+</body>
+</html>
+
+<script>
+    // 키 이벤트는 이벤트가 발생해야 동작
+    // 한글, 복붙은 이벤트 발생하지 않음
+    // 정규식 사용 - 우편번호나 이메일 등 특정 형식을 따르는 데이터를 찾고자 할 때 사용
+    //              /패턴/g - 해당 패턴을 만족하는 모든 데이터라는 의미
+    //              /[0-9] - 0,1,2,3,4,5,6,7,8,9가 올 수 있음
+    //              /[^0-9] - 0,1,2,3,4,5,6,7,8,9를 제외한 모든 문자
+    //              this.value.replace(/[^0-9]/g, '') 0~9를 제외한 모든 문제를 찾아서 공백으로 바꾸고, 원본 데이터 수정이 아닌 리턴값 반환
+    function inNumber(){
+        console.log(event);
+        console.log(event.keyCode)
+        if (event.keyCode<48 || event.keyCode>57)
+        {
+            event.returnValue = false;      // set return value
+        }
+        
+    }
+</script>

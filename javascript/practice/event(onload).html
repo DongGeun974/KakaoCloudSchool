@@ -12,13 +12,11 @@
 </html>
 
 <script>
-    async function f() { 
-        return 1;           // async 키워드를 써주면 promise 객체를 만들어서 반환
-     }
+    window.onload = function () {
+        alert("문서 모두 로딩")
+      }
 
-    f().then((a)=>{
-        alert(a)
-    })
-
-    
+    window.onunload = function(){
+        alert("문서 모두 해제")
+    }
 </script>
