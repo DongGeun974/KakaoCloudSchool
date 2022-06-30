@@ -1,0 +1,41 @@
+-- primary key : not null과 중복 안됨
+--              테이블 당 하나씩 부여
+--              단, 여러개의 필드를 묶어서 하나의 primary key를 만들기도 한다
+--              없어도 동작 가능
+--                 데이터베이스는 순차검색, 색인순차
+--                 primary key를 지정하는 필드는 무조건 색인 만들어줌
+--                 순차러리 병렬처리, 색인순차는 직렬
+-- foreign key : 두개의 테이블이 1:n 관계에서
+--                 1이 primary key 또는 unique이고,
+--                 n에서 앞의 테이블을 외부키로 만들 수 있음
+--                 서로 제약
+--                 1인 테이블쪽은 데이터를 함수로 삭제하거나 테이블을 삭제할 수 없음
+--                 n운 1인 테이블에 없는 데이터를 추가할 수 없음
+-- unique : null 허용, 중복 안됨
+
+-- char(40) : 공백 39개로 채워 저장
+--             성별, 주민번호, 코드 등 자리수가 정해져있는 항목
+
+create table member
+(
+    memberid bigint not null primary key auto_increment,
+    userid varchar(40),
+    password varchar(200),      -- 암호화 알고리즘
+    username varchar(40),
+    email varchar(40),
+    phone varchar(40),
+    wdata datetime,             -- 등록일
+    delyn char(1) default 'N'   -- 기본값은 N으로 하고 탈퇴, 강퇴 시 Y
+);
+
+insert into member(userid, password, username, email, phone, wdata)
+values('test', '1234', '홍길동', 'hong@hanmail.net', '010-0000-1111', now()) ;
+
+create table board(
+    id bigint not null primary key auto_increment,
+    title varchar(800),
+    writer varchar(40),
+    contents longtextm
+    wdata datetime,
+    hit hit
+);
