@@ -14,6 +14,7 @@ class ThreadEx_04 extends Thread{
 			
 			try {
 				Thread.sleep(4000);
+				// Exception 생성
 			}catch (Exception e) {
 //				isInterrupted();		// false
 //				interrupt();
