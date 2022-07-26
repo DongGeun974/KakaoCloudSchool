@@ -8,3 +8,4 @@ node_modules/
 .metadata/
 
 Java/eclipse-workspace/SampleProject/resources/db.properties
+Java/eclipse-workspace/BookStoreProject/src/main/webapp/META-INF/context.xml
