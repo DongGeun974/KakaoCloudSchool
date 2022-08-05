@@ -1,22 +1,12 @@
 import React from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import List from './List';
+import Edit from './Edit'
 
-export default function Lists({todoData, setTodoData}) {
-    
-    const deleteClick = (id) => {
-        const newTodoData = todoData.filter(data=>data.id !== id)
-        setTodoData(newTodoData)
-    }
+// 구조분해할당 이용
+const Lists = React.memo(({deleteClick, todoData, setTodoData}) => {
 
-    const handleCompleteChange = (id) =>{
-        let newTodoData = todoData.map((data)=>{
-          if(data.id === id){
-            data.completed = !data.completed
-          }
-          return data
-        })
-        setTodoData(newTodoData)
-    }
+    console.log("lists component 실행");
 
     const handleDrop = (e) =>{
         // e : event 객체, event에 대한 세부 정보를 가짐
@@ -44,22 +34,26 @@ export default function Lists({todoData, setTodoData}) {
                                     draggableId={data.id.toString()}
                                     index={index}>
                                     {(provided, snapshot)=>(
-                                        <div key={data.id}
-                                            {...provided.draggableProps}
-                                            ref={provided.innerRef}
-                                            {...provided.dragHandleProps}>
-                                            <div className={`${snapshot.isDragging ? "bg-gray-500":"bg-gray-100" } flex items-center justify-between w-full px-4 py-1 my-2 text-gray-600 border rounded`}>
-                                                <div className='items-center'>
-                                                    <input type="checkbox"
-                                                        defaultChecked={false}
-                                                        onChange={() => handleCompleteChange(data.id)} />
-                                                    {" "}<span className={data.completed ? "line-through" : undefined}>{data.title}</span>
-                                                </div>
-                                                <div className='items-center'>
-                                                    <button onClick={() => deleteClick(data.id)}>delete</button>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        // need component
+
+                                        data.edited ? 
+                                        <Edit id={data.id} 
+                                        title={data.title}
+                                        completed={data.completed}
+                                        todoData={todoData}
+                                        setTodoData={setTodoData}
+                                        provided={provided}
+                                        snapshot={snapshot} 
+                                        deleteClick={deleteClick}/>:
+                                        <List id={data.id} 
+                                        title={data.title}
+                                        completed={data.completed}
+                                        todoData={todoData}
+                                        setTodoData={setTodoData}
+                                        provided={provided}
+                                        snapshot={snapshot} 
+                                        deleteClick={deleteClick}/> 
+
                                     )}
                                 </Draggable>
                             ))}
@@ -72,3 +66,6 @@ export default function Lists({todoData, setTodoData}) {
         </div>
     )
 }
+); 
+
+export default Lists;
