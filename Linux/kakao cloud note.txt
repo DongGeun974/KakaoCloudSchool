@@ -1,0 +1,191 @@
+
+-- 강사 운영 카페
+https://cafe.naver.com/ocmkorea
+
+-- Centos download site
+http://isoredirect.centos.org/centos/7/isos/x86_64
+
+-- 자료 공유
+http://naver.me/xJaV26Rd	암호(kkocloud)
+
+http://54.180.80.117/
+
+ 코더 -> 프로그래머 -> 개발자(developer) -> 10년차 이상
+
+-- Unix > minix > 1991 linux -> minix + 리눅즈 = Linux
+   ㄴ 계열: IBM(AIX), Oracle(Solaris), HP(hp-ux)  -> license
+
+	배포판(open source) -> debian계열(Ubuntu), CentOS(RedHat expire)
+		ㄴ GPL v2. license -> 오픈소스를 이용한 상업용 S/W 개발 시 공유해야 한다
+
+	상업용 -> Redhat enterprise OS
+
+	CentOS => Community enterprise OS
+
+	Network basic concept -> IP(3), TCP(4), SSL(7),... ---> OSI 7 계층
+
+
+	IAM (Identity and Access Management)
+		ㄴ Identity -> ID/Pass -> 인증, Authentication(=AuthN)
+		ㄴ Access -> 권한, 인가, 허가 -> Authorization(=AuthZ)
+
+
+	shellscript = linux programming = bash
+		ㄴ 시스템 업무에 프로그래밍? 업무의 편의성, 자동화
+
+	가상화 -> 시스템(호스트)이 보유한 자원을 가상화 대상에 일부를 제공 
+				     ㄴ CPU -> 동작원리(time scheduling)
+						--- kernel ---
+				       Memory -> workload 처리 -> process 요청
+				       Disk -> storage(저장소)
+						ㄴ IOPS, MBPS 성능 지표
+				       Network -> OSI, 방화벽, Packet, Port	
+
+	
+	Monitoring -> 이상징후(event) -> 일시적, 지속적 -> 장애 대비
+		   -> 수집되는 데이터(로그) -> bigdata 저장 -> 패턴 분석 -> insight	
+
+	
+	DevOps
+	-----------
+	DevSecOps
+
+
+
+	3-Tier model -> container? server base? serverless?
+
+	# 기준!
+	OS disk를 제외한 다른 disk partition에 application, DB 등을 설치해야 한다.
+
+
+	# 가상화 이미지 -> VM기반 -> Container기반 -> Cloud기반
+	
+	image -> 패키징 = (OS + App. + 종속프로그램 등)
+		ㄴ VM -> OVF 기술 기반
+		ㄴ Container -> OCI 기술 기반
+		ㄴ Cloud -> OVF -> AWS image = AMI
+	
+	public IP (공인IP) 
+	private IP (사설IP) -> 192.168.x.x / 172.16.x.x / 10.x.x.x -> RFC1918 
+	
+	어댑터1 -> NAT -> 사설IP를 공인IP로 변환(또는, 그 반대)
+		ㄴ 외부 네트워크 연결 사용(10.x.x.x)
+		ㄴ enp0s3 NIC(10.x.x.x)
+	---------------------------------------------------
+	어댑터2 -> host-only -> infra용(내부망)
+		ㄴ enp0s8 NIC(192.168.56.x)
+
+
+	Unix		/u01/app/oracle ...
+	  vs.
+	Windows		c:\app\oracle
+
+	# Disk partition(C: D:)
+
+	/dev/sda
+	dev	/dev: device 장치영역
+	sd	SCSi device -> disk 장치 -> HDD, SATA, SCSi
+	a	disk#
+	1	partition#
+	-----------------------------------------------
+	(62G)/	최상위 디렉터리 = rootFS -> Linux OS 설치
+	(10G)/u01	특정 애플리케이션을 위한 파티션
+	(20G)/BACKUP	백업을 위한 파티션
+	(8G)swap	가상메모리 (Win -> pagefile.sys)
+		ㄴ 메모리 부족시 사용되는 메모리 공간
+		ㄴ Disk or File로 생성
+		ㄴ 동작원리?
+
+	ext4 -> 8 Exa, file/16TB
+	xfs -> ext4와 유사, 클라우드 FS의 기본값? 쓰기 속도가 ext4보다 빠름
+
+	K > M > G > T > Peta > Exa > Zeta > Yota
+			ㄴ Meta(FB) day/4800 peta
+	
+	world 2 year - digital data = 1.7 Zeta
+
+	(W) administrator
+	(L) root / pass123#
+
+	
+	putty 	-> remote client tools (putty.exe 제외 -> putty.msi 로 설치)
+	winSCP	-> 파일 주고받기
+	notepad++ 	-> yaml code 작성 시 사용
+
+	-- 회원 가입 필요 사이트
+	AWS 콘솔		https://aws.amazon.com/		-> 비교 	-> EKS
+	Google 콘솔	https://console.cloud.google.com/	-> GKE
+	docker		https://hub.docker.com/		-> container
+	Github		https://github.com/		-> CI/CD pipeline
+	
+
+	pass123#123$
+
+	NIC -> loopback
+
+	network 확인? ping (Packget INternet Gropher) -> ICMP
+
+
+[root@server1 ~]# hostname
+server1.kakao.com
+
+1) hostname 변경
+[root@server1 ~]# hostnamectl set-hostname server2.kakao.com
+[root@server1 ~]# hostname
+server2.kakao.com
+[root@server1 ~]# reboot
+
+2) IP -> 리눅스 제어판 -> enp0s8의 IP만 192.168.56.102 으로 변경 
+
+3) Server1 VM booting
+
+
+[root@server1 ~]# mkdir LABs && cd $_
+=
+[root@server1 ~]# mkdir LABs
+[root@server1 ~]# cd LABs
+[root@server1 LABs]#
+
+
+[root@server1 ~]# mkdir LABs && cd $_
+[root@server1 LABs]# cp /etc/services .
+[root@server1 LABs]# ls
+services
+
+ddd
+
+	:q	quit
+	:q!	force quit
+	:wq	저장 후 종료
+	:wq!
+
+
+	-- 다른 이름으로 저장 (% = 전체)
+	:w 파일명
+	:1,5 w kakao_1to5	-> 원하는 라인을 다른이름으로 저장
+
+
+	Q) 보안팀으로부터 root의 원격 접속 차단을 요구받음.
+	-> [root@server1 LABs]# vi /etc/ssh/sshd_config
+	    :38 #PermitRootLogin yes
+
+	Q) tcp라는 글자를 kakao로 변경 요청
+	:%s/tcp/kakao
+	:%s/tcp/kakao/g
+	:set ignorecase
+	:%s/tcp/kakao/g
+
+	-- 대문자를 소문자로 변경할 때 -> . * \ -> 메타캐릭터 -> 정규표현식
+	:%s/.*/\L&/g
+
+	-- 소문자를 대문자로 변경할 때
+	:%s/.*/\U&/g
+
+
+
+
+
+
+
+
+
