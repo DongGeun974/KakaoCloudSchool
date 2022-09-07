@@ -1,0 +1,1122 @@
+
+-- 강사 운영 카페
+https://cafe.naver.com/ocmkorea
+
+-- Centos download site
+http://isoredirect.centos.org/centos/7/isos/x86_64
+
+-- 자료 공유
+http://naver.me/xJaV26Rd	암호(kkocloud)
+
+http://54.180.80.117/
+
+ 코더 -> 프로그래머 -> 개발자(developer) -> 10년차 이상
+
+-- Unix > minix > 1991 linux -> minix + 리눅즈 = Linux
+   ㄴ 계열: IBM(AIX), Oracle(Solaris), HP(hp-ux)  -> license
+
+	배포판(open source) -> debian계열(Ubuntu), CentOS(RedHat expire)
+		ㄴ GPL v2. license -> 오픈소스를 이용한 상업용 S/W 개발 시 공유해야 한다
+
+	상업용 -> Redhat enterprise OS
+
+	CentOS => Community enterprise OS
+
+	Network basic concept -> IP(3), TCP(4), SSL(7),... ---> OSI 7 계층
+
+
+	IAM (Identity and Access Management)
+		ㄴ Identity -> ID/Pass -> 인증, Authentication(=AuthN)
+		ㄴ Access -> 권한, 인가, 허가 -> Authorization(=AuthZ)
+
+
+	shellscript = linux programming = bash
+		ㄴ 시스템 업무에 프로그래밍? 업무의 편의성, 자동화
+
+	가상화 -> 시스템(호스트)이 보유한 자원을 가상화 대상에 일부를 제공 
+				     ㄴ CPU -> 동작원리(time scheduling)
+						--- kernel ---
+				       Memory -> workload 처리 -> process 요청
+				       Disk -> storage(저장소)
+						ㄴ IOPS, MBPS 성능 지표
+				       Network -> OSI, 방화벽, Packet, Port	
+
+	
+	Monitoring -> 이상징후(event) -> 일시적, 지속적 -> 분석 -> 문제해결 -> 장애 대비
+		   -> 수집되는 데이터(로그) -> bigdata 저장 -> 패턴 분석 -> insight	
+
+	
+	DevOps
+	-----------
+	DevSecOps
+
+
+
+	3-Tier model -> container? server base? serverless?
+
+	# 기준!
+	OS disk를 제외한 다른 disk partition에 application, DB 등을 설치해야 한다.
+
+
+	# 가상화 이미지 -> VM기반 -> Container기반 -> Cloud기반
+	
+	image -> 패키징 = (OS + App. + 종속프로그램 등)
+		ㄴ VM -> OVF 기술 기반
+		ㄴ Container -> OCI 기술 기반
+		ㄴ Cloud -> OVF -> AWS image = AMI
+	
+	public IP (공인IP) 
+	private IP (사설IP) -> 192.168.x.x / 172.16.x.x / 10.x.x.x -> RFC1918 
+	
+	어댑터1 -> NAT -> 사설IP를 공인IP로 변환(또는, 그 반대)
+		ㄴ 외부 네트워크 연결 사용(10.x.x.x)
+		ㄴ enp0s3 NIC(10.x.x.x)
+	---------------------------------------------------
+	어댑터2 -> host-only -> infra용(내부망)
+		ㄴ enp0s8 NIC(192.168.56.x)
+
+
+	Unix		/u01/app/oracle ...
+	  vs.
+	Windows		c:\app\oracle
+
+	# Disk partition(C: D:)
+
+	/dev/sda
+	dev	/dev: device 장치영역
+	sd	SCSi device -> disk 장치 -> HDD, SATA, SCSi
+	a	disk#
+	1	partition#
+	-----------------------------------------------
+	(62G)/	최상위 디렉터리 = rootFS -> Linux OS 설치
+	(10G)/u01	특정 애플리케이션을 위한 파티션
+	(20G)/BACKUP	백업을 위한 파티션
+	(8G)swap	가상메모리 (Win -> pagefile.sys)
+		ㄴ 메모리 부족시 사용되는 메모리 공간
+		ㄴ Disk or File로 생성
+		ㄴ 동작원리?
+
+	ext4 -> 8 Exa, file/16TB
+	xfs -> ext4와 유사, 클라우드 FS의 기본값? 쓰기 속도가 ext4보다 빠름
+
+	K > M > G > T > Peta > Exa > Zeta > Yota
+			ㄴ Meta(FB) day/4800 peta
+	
+	world 2 year - digital data = 1.7 Zeta
+
+	(W) administrator
+	(L) root / pass123#
+
+	
+	putty 	-> remote client tools (putty.exe 제외 -> putty.msi 로 설치)
+	winSCP	-> 파일 주고받기
+	notepad++ 	-> yaml code 작성 시 사용
+
+	-- 회원 가입 필요 사이트
+	AWS 콘솔		https://aws.amazon.com/		-> 비교 	-> EKS
+	Google 콘솔	https://console.cloud.google.com/	-> GKE
+	docker		https://hub.docker.com/		-> container
+	Github		https://github.com/		-> CI/CD pipeline
+	
+
+	pass123#123$
+
+	NIC -> loopback
+
+	network 확인? ping (Packget INternet Gropher) -> ICMP
+
+
+[root@server1 ~]# hostname
+server1.kakao.com
+
+1) hostname 변경
+[root@server1 ~]# hostnamectl set-hostname server2.kakao.com
+[root@server1 ~]# hostname
+server2.kakao.com
+[root@server1 ~]# reboot
+
+2) IP -> 리눅스 제어판 -> enp0s8의 IP만 192.168.56.102 으로 변경 
+
+3) Server1 VM booting
+
+
+[root@server1 ~]# mkdir LABs && cd $_
+=
+[root@server1 ~]# mkdir LABs
+[root@server1 ~]# cd LABs
+[root@server1 LABs]#
+
+
+[root@server1 ~]# mkdir LABs && cd $_
+[root@server1 LABs]# cp /etc/services .
+[root@server1 LABs]# ls
+services
+
+ddd
+
+	:q	quit
+	:q!	force quit
+	:wq	저장 후 종료
+	:wq!
+
+
+	-- 다른 이름으로 저장 (% = 전체)
+	:w 파일명
+	:1,5 w kakao_1to5	-> 원하는 라인을 다른이름으로 저장
+
+
+	Q) 보안팀으로부터 root의 원격 접속 차단을 요구받음.
+	-> [root@server1 LABs]# vi /etc/ssh/sshd_config
+	    :38 #PermitRootLogin yes
+
+	Q) tcp라는 글자를 kakao로 변경 요청
+	:%s/tcp/kakao
+	:%s/tcp/kakao/g
+	:set ignorecase
+	:%s/tcp/kakao/g
+
+	-- 대문자를 소문자로 변경할 때 -> . * \ -> 메타캐릭터 -> 정규표현식
+	:%s/.*/\L&/g
+
+	-- 소문자를 대문자로 변경할 때
+	:%s/.*/\U&/g
+
+
+
+
+
+----------------------- day 02 ----------------------------
+
+login as: root
+root@192.168.56.101's password: pass123#
+
+	-> 인증(AuthN) -> ID(/etc/passwd) | Pass(/etc/shadow) 검증 수행
+		ㄴ 접근 허용
+[root@server1 ~]# 
+
+
+
+	# shellscript
+		ㄴ 반복적인 작업의 편의성 제공 -> 업무 자동화에 도움
+		ㄴ 시각적 작업의 불편함
+			ㄴ Pytho	n -> 시스템 모듈을 통한 정보 수집 -> 시각화
+
+
+
+
+# 덮어쓰기 방지
+# 현재 세션 전체에 덮어쓰기 방지
+	[root@server1 LABs]# set -o noclobber	# 설정
+	[root@server1 LABs]# set +o noclobber	# 해제
+
+# 특정 파일에 대한 쓰기 금지
+[root@server1 LABs]# chattr +i time.sh
+[root@server1 LABs]# lsattr
+----i----------- ./time.sh
+[root@server1 LABs]# echo 'overwrite' > time.sh
+-bash: time.sh: Permission denied
+
+[root@server1 LABs]# chattr -i time.sh
+[root@server1 LABs]# lsattr
+
+
+
+
+# 세션 레벨 -> 해당 세션만 사용가능, 해당 세션이 유지되는 동안만 사용됨.
+[root@server1 LABs]# alias pssh='ps -ef | grep ssh'
+
+# 사용자 레벨 -> 해당 사용자 설정이 영구적으로 사용됨.
+[root@server1 LABs]# cd
+[root@server1 ~]# vi .bashrc    # 환경설정 파일
+
+alias pssh='ps -ef | grep ssh'
+
+[root@server1 ~]# source .bashrc	# 설정 적용!
+[root@server1 ~]# . .bashrc		# 설정 적용!
+
+# 시스템 레별 -> 시스템 전역 영구 설정 -> 모든 사용자에게 적용됨. -> root와 같은 관리자만 가능!
+[root@server1 ~]# vi /etc/bashrc
+      1 # /etc/bashrc
+      2 alias pssh='ps -ef | grep ssh'
+
+[root@server1 ~]# source /etc/bashrc
+
+
+
+[root@server1 What is your motto]# yum -y install tree
+[root@server1 What is your motto]# tree
+.
+├── assets
+│   ├── favicon.ico
+│   └── img
+│       ├── about
+│       │   ├── 1.jpg
+│       │   ├── 2.jpg
+│       │   ├── 3.jpg
+│       │   └── 4.jpg
+│       ├── close-icon.svg
+
+[root@server1 ~]# alias motind='cd /root/LABs/What is your motto'
+[root@server1 ~]# motind
+
+
+[root@server1 ~]# yum -y install httpd		---> 80 port -> 0~65535
+						ㄴ 관리(0~1023), 일반(1024~65535)
+
+
+[root@server1 ~]# yum -y install httpd
+[root@server1 ~]# systemctl enable httpd.service
+[root@server1 ~]# systemctl daemon-reload
+[root@server1 ~]# systemctl start httpd.service
+[root@server1 ~]# systemctl status httpd.service
+[root@server1 ~]# netstat -nlp | grep 80
+
+	0.0.0.0:80
+
+-- fw_enable.sh
+[root@server1 ~]# firewall-cmd --add-service=http --permanent
+[root@server1 ~]# firewall-cmd --add-port=80/tcp --permanent
+[root@server1 ~]# firewall-cmd --reload
+[root@server1 ~]# firewall-cmd --list-all
+
+-- fw_disable.sh
+[root@server1 ~]# firewall-cmd --remove-service=http --permanent
+[root@server1 ~]# firewall-cmd --remove-port=80/tcp --permanent
+[root@server1 ~]# firewall-cmd --reload
+[root@server1 ~]# firewall-cmd --list-all
+
+[root@server1 LABs]# vi index.html
+[root@server1 LABs]# cat index.html
+<h1> Welcome to kevin.lee </h1>
+
+[root@server1 LABs]# cp index.html /var/www/html/index.html
+
+
+
+
+	
+	
+	
+	# history
+		- 이전 사용 기록
+		- 1000개, 세션 버퍼에 우선 기록 -> 세션 종료 시 -> .bash_history 기록
+		
+
+# KT 서버 320대 -> 3교대 -> 식별? 호스트명 -> [server1 ~]# 
+			-> 
+
+[root@server1 ~]#
+
+[]		사용자정의
+root		접속사용자 -> \u
+@		사용자정의
+server1		호스트명 -> \h
+~		현재경로 (마지막경로 / 전체경로) -> \W
+#		사용자타입 -> #(root), $(일반사용자) -> \$
+
+
+	# /etc/profile -> 환경 설정, 환경 변수..
+-------------------------------------------------
+	# /etc/bashrc -> alias, function..
+
+
+	# directory -> 파일 및 디렉터리 들의 "주소"를 저장한 "파일"
+
+	vi /u01/app/oracle/product/12.2.0/db_1/bin/sqlplus
+
+	text file -> vi로 편집이 가능한 파일 형태
+
+	binary file -> S/W로 생성한 파일 형태 <- vi편집기로 수정 시 깨짐! 	
+						<- 해당 S/W 읽지 못함!
+
+	shellscript = 쉘 스크립트 = 셸 스크립트
+
+
+
+[root@server1 LABs]# ls -l
+
+drwxr-xr-x. 3 root root     16 Sep  1 14:24 d1
+-rw-r--r--. 1 root root     58 Sep  1 09:37 date.txt
+-rwx------. 1 root root    277 Sep  1 11:40 fw_disable.sh  -> chmod 700 .sh
+-rwx------. 1 root root    271 Sep  1 11:33 fw_enable.sh
+-rw-r--r--. 1 root root     32 Sep  1 11:42 index.html
+
+	Permission -> r(read, 4) w(write, 2) x(execute, 1) -(0)
+	rw-	r--	r--
+ 권한	(소유자)	(그룹)	(기타)
+
+
+		# apache(httpd) -> Nginx => 웹서버, 웹서비스, Proxy(전달->LB)
+
+[root@server1 LABs]# ps -ef | grep http
+[root@server1 LABs]# systemctl status httpd.service
+[root@server1 LABs]# netstat -nlp | grep 80
+[root@server1 httpd]# tail -f access_log
+
+# 패턴 10 -> $1 ~$10
+       $1                $4
+192.168.56.101 - - [01/Sep/2022:11:10:31 +0900] "GET / HTTP/1.1" 403 4897 "-" "Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0"
+
+	Q) 특정 시간대에 들어온 고객의 IP를 찾아서 -> 중복배제 + 내림차순 + count
+
+[01/Sep/2022:11:10:31]
+[01/Sep/2022:15:20:55]
+
+		raw data = 원시 데이터 -> 평균 -> 정보
+		데이터와 정보
+	
+	관계형데이터베이스(RDBMS) -> 엄격한 스키마 규칙!
+	<> NoSQL -> Not only SQL = 정형, 비정형 -> 실시간데이터 
+	-> Bigdata -> 3V() -> 분석 -> 가치 -> insight(통찰력) -> 경쟁력 -> 생존
+		ㄴ Elasticsearch, MongoDB -> json
+
+	# 	   수집된
+	# 실시간으로 수집되는 로그(데이터) -> stream data -> 저장? DB, file
+
+# cluster로 연결되 서버간의 신뢰 구성 (trust)
+
+[root@server1 ~]# vi /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.56.101  server1 server1.kakao.com
+192.168.56.102  server2 server2.kakao.com
+
+[root@server1 ~]# scp -r LABs 192.168.56.102:/root
+[root@server1 ~]# scp -r LABs server2:/root
+[root@server1 ~]# scp -r LABs server2.kakao.com:/root
+
+[root@server1 link_dir]# ln -s file1 file1_s
+[root@server1 link_dir]# ln file2 file2_h
+[root@server1 link_dir]# ls -li
+100869034 -rw-r--r--. 1 root root 0 Sep  1 16:26 file1
+100869036 lrwxrwxrwx. 1 root root 5 Sep  1 16:27 file1_s -> file1
+
+100869035 -rw-r--r--. 2 root root 0 Sep  1 16:26 file2
+100869035 -rw-r--r--. 2 root root 0 Sep  1 16:26 file2_h
+
+[root@server1 link_dir]# rm -rf file1 file2
+[root@server1 link_dir]# ls -li
+total 0
+  2644316 drwxr-xr-x. 2 root root 6 Sep  1 16:26 dir1
+ 38313505 drwxr-xr-x. 2 root root 6 Sep  1 16:26 dir2
+100869036 lrwxrwxrwx. 1 root root 5 Sep  1 16:27 file1_s -> file1
+100869035 -rw-r--r--. 1 root root 0 Sep  1 16:26 file2_h
+
+
+
+
+
+
+
+------------------------ day03 ----------------------------
+
+	IT 인재상? T자인간
+
+
+find / -type f \( -perm -04000 -o -perm -02000 \) -exec ls -l {} \; | /bin/mail -s "SUID/SGID LIST" root
+-> 스케줄러(cron) -> 자동화
+
+/
+-type f
+\( -perm -04000 -o -perm -02000 \) -> 특수권한
+-exec ls -l {} \;
+/bin/mail -s "SUID/SGID LIST" root
+
+-> 4000, 2000 특수권한을 갖고 있는 파일을 최상위 / 에서 찾아서 root 사용자에게 ls -l 한 결과를 메일로 보내주세요.
+
+# 50개 유지 중이다. -> 52개 증가?
+[root@server1 ~]# find / -type f \( -perm -04000 -o -perm -02000 \) -exec ls -l {} \; | /bin/mail -s "SUID/SGID LIST" root
+
+[root@server1 ~]# cd /var/spool/mail/
+[root@server1 mail]# vi root
+
+
+[root@server1 ~]# which find
+/usr/bin/find
+	ㄴ 절대경로 확인! -> 스케줄러에 사용되는 명령어는 절대경로를 입력해야 함.
+	  ㄴ 절대경로에 등록된 실행파일은 해당 시스템의 어떤 경로에서든 실행 가능하다!
+
+[root@server1 ~]# echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin
+
+	-> 실행 가능한 애플리케이션(shellscript)을 개발했다. -> 절대경로에 등록
+		1) 절대경로($PATH)에 등록된 경로에 실행파일을 저장하든
+		2) 절대경로($PATH)에 애플리케이션의 ~/bin을 등록한다.
+
+
+	멀티클라우드 -> 각 클라우드의 장점을 특정에 도입하여 다양하게 사용하는 방식
+
+	시나리오) 오라클을 설치하고자 한다. 사전 준비 사항 중에 오라클 S/W가 설치되는 
+		경로($ORALCE_HOME=/u01~, $ORALCE_HOME/bin)등을 준비해야한다.
+		따라서, 해당 경로를 절대경로($PATH)에 등록해야 한다.
+	
+[root@server1 ~]# useradd oracle
+[root@server1 ~]# df -h
+/dev/sda3       9.4G   33M  9.3G   1% /u01
+[root@server1 ~]# mkdir -p /u01/app/oracle/prodcut/12.2.0/db_1/bin
+[root@server1 ~]# chown -R oracle.oracle /u01
+[root@server1 ~]# su - oracle
+[oracle@server1 ~]$ vi .bash_profile
+export ORACLE_HOME=/u01/app/oracle/prodcut/12.2.0/db_1
+PATH=$PATH:$HOME/.local/bin:$HOME/bin:$ORACLE_HOME/bin
+[oracle@server1 ~]$ . .bash_profile
+[oracle@server1 ~]$ echo $ORACLE_HOME
+/u01/app/oracle/prodcut/12.2.0/db_1
+[oracle@server1 ~]$ vi $ORACLE_HOME/bin/sqlplus
+echo 'DB connection.'
+echo 'SQL> '
+
+[oracle@server1 ~]$ chmod 700 $ORACLE_HOME/bin/sqlplus
+[oracle@server1 ~]$ echo $PATH
+....:/u01/app/oracle/prodcut/12.2.0/db_1/bin
+[oracle@server1 ~]$ sqlplus
+DB connection.
+SQL>
+
+
+	# IAM = AuthN(인증) + AuthZ(인가)
+	# 권한 제어(Permission) ---> 접근 제어
+	  ㄴ 파일, 디렉터리 수준에서 r(4),w(2),x(1),-(0) 으로 제어
+
+		ㄴ 접근제어(ACL, Access Control List)
+		 -> 사용자 수준에서 접근 제어 가능
+
+	-> Cloud 보안 -> 서비스 수준의 방화벽(보안그룹) -> INB(All Deny), OUTB(All Allow)
+		     -> NACL (Allow, Deny)
+
+
+	2, 8, 10, 16 ---> CIDR 계산방법 -> 원하는 대역을 사설 네트워크를 통해 지정
+			   ㄴ 192.16.0.0/24 -> 65536개
+
+		
+	111(10) -> 01101111
+
+		2^7  2^6  2^5  2^4  2^3  2^2  2^1  2^0
+		--------------------------------------
+		128  64   32    16   8    4    2    1	
+		0     1    1    0    1    1    1    1
+
+		4    2    1/ 4    2    1/4    2    1
+	8진수    0    0    1/  1    0   1/  1    1    1
+		     1            5           7
+	------------------------------------------------
+	16진수   0     1    1    0  /  1    1    1    1
+			6		F
+
+	CD(16)
+	137(10)
+	10101110(2)
+	271(8)
+	F2(16)
+
+
+
+[root@server1 LABs]# mkdir perm && cd $_
+[root@server1 perm]# touch file1
+[root@server1 perm]# mkdir dir1
+[root@server1 perm]# ls
+dir1  file1
+[root@server1 perm]# ls -l
+total 0							     (umask)
+drwxr-xr-x. 2 root root 6 Sep  1 19:56 dir1	-> 755 = 777-022
+-rw-r--r--. 1 root root 0 Sep  1 19:56 file1	-> 644 = 666-022
+
+	-> shellscript (*.sh) -> 644 -> executable -> +x(1) -> 700
+
+
+	대한민국 전체 은행의 평균 초당 거래 건수? 50000 (국민은행 5000)
+
+
+	systemctl stop httpd.service -> 정상종료 -> graceful shutdown <> force
+	<> kill 시그널 프로세스명|PID
+
+	cpu		-> sar
+	memory		-> vmstat
+	disk		-> (I/O) iostat, iotop -> IOPS, MBPS
+			kB_read/s    kB_wrtn/s  |  kB_read    kB_wrtn
+
+	network		-> packet(전송단위) -> PPS -> 초당 패킷 유입량
+	[root@server1 ~]# yum -y install iptraf-ng
+
+
+
+1) [root@server1 ~]# yum -y update
+
+2) [root@server1 ~]# yum -y install epel-release
+   [root@server1 ~]# yum -y update
+
+3)  
+[root@server1 ~]# cd /etc/yum.repos.d/
+[root@server1 yum.repos.d]# vi Daum.repo
+[root@server1 ~]# yum -y update
+
+4) reboot
+
+[root@server1 ~]# dstat --all
+[root@server1 ~]# yum -y install glances
+[root@server1 ~]# glances
+
+
+
+
+[root@server1 ~]# yum -y install monit
+[root@server1 ~]# vi /etc/monitrc
+...
+    157 set httpd port 2812 and
+    158     use address 0.0.0.0  # only accept connection from localhost
+    159     allow 0.0.0.0/0        # allow localhost to connect to the server and
+    160     allow admin:monit      # require user 'admin' with password 'monit'
+
+[root@server1 ~]# systemctl daemon-reload
+[root@server1 ~]# systemctl enable monit.service
+[root@server1 ~]# systemctl start monit.service
+[root@server1 ~]# systemctl status monit.service
+[root@server1 ~]# fw_enable.sh
+
+
+	* * * * * 작업내용
+
+
+
+
+# 오후 4시 35에 특수권한 조회를 자동으로 스케줄링하고, 관리자(root)에게 mail을 보내시오.
+  제목은 "SUID/SGID LIST" 으로 하시오.
+
+[root@server1 ~]# crontab -e
+35 16 * * * /usr/bin/find / -type f \( -perm -04000 -o -perm -02000 \) -exec ls -l {} \; | /bin/mail -s "SUID/SGID LIST" root
+
+
+------------------------- day 04 --------------------------
+
+[root@server1 LABs]# vi log_backup.sh
+#!/bin/bash
+set $(date)
+fname="$6-$2-$3-backup"
+tar -cvzf /BACKUP/$fname.tar.gz /var/log
+
+[root@server1 ~]# date
+Mon Sep 05 09:33:46 KST 2022
+ $1 $2  $3   $4     $5  $6
+
+[root@server1 LABs]# chmod 700 log_backup.sh
+[root@server1 ~]# ./log_backup.sh
+…
+/var/log/wtmp
+/var/log/cron-20220905
+…
+[root@server1 LABs]# cd /BACKUP/
+[root@server1 BACKUP]# ls -l
+2022-Sep-05-backup.tar.gz
+
+[root@server1 LABs]# crontab -e		# 현재 시간에서 테스트 후 매일 12시로 변경
+00 12 */1 * * /root/LABs/log_backup.sh
+
+
+	# Telnet -> packet 전송 시 평문으로 전송
+	# SSH -> packet 전송 시 암호문으로 전송
+				ㄴ RSA/DSA 알고리즘
+				   ㄴ 소인수분해 개념을 이용한 암호화
+	# 3DES -> 난수(random) 알고리즘
+
+
+
+
+
+
+
+
+
+
+■ SSH_key 생성을 통한 암호 없는 접속과 복사
+
+[root@server1 ~]# cd .ssh/
+[root@server1 .ssh]# /usr/bin/ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa): ★엔터★
+Enter passphrase (empty for no passphrase): ★엔터★
+Enter same passphrase again: ★엔터★
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:yekaXWPWHv6O0R4AY4Sk8VL9nqHQI+KHSwIvBVxbqEU root@server1.kpc.com
+The key's randomart image is:
++---[RSA 2048]----+
+| . oE.o.oo.      |
+|  o oo =...      |
+|   +. o ..+.     |
+|  o . .oo+o+o    |
+|   + . oSo=++o   |
+|  . o +o.+.+o+   |
+|   . o.oo   + o  |
+|      .o     = . |
+|      .     ..+  |
++----[SHA256]-----+
+[root@server1 .ssh]#
+
+[root@server1 .ssh]# /usr/bin/ssh-keygen -t dsa
+Generating public/private dsa key pair.
+Enter file in which to save the key (/root/.ssh/id_dsa): ★엔터★
+Enter passphrase (empty for no passphrase): ★엔터★
+Enter same passphrase again: ★엔터★
+Your identification has been saved in /root/.ssh/id_dsa.
+Your public key has been saved in /root/.ssh/id_dsa.pub.
+The key fingerprint is:
+SHA256:dcayTVgLkm2/Wvf9c8gbkToCYdnSHz19SY2guclXntI root@server1.kpc.com
+The key's randomart image is:
++---[DSA 1024]----+
+|        .o. o. o.|
+|        .=oB oo.o|
+|        =.O.B +.o|
+|       . = @.= +.|
+|        S = =.E  |
+|         . .oo.. |
+|          .ooo.o.|
+|          .. .oo+|
+|              ..=|
++----[SHA256]-----+
+
+[root@server1 .ssh]# ssh server1 cat /root/.ssh/id_rsa.pub >> authorized_keys
+The authenticity of host 'server1 (192.168.56.101)' can't be established.
+ECDSA key fingerprint is SHA256:9rhqPNtu7ePM/+OBI9IQJrOILo6jOZDH32XZFmHbcys.
+ECDSA key fingerprint is MD5:53:42:f3:a0:bb:35:eb:ea:75:b5:a4:c2:f6:e7:aa:18.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'server1,192.168.56.101' (ECDSA) to the list of known hosts.
+root@server1's password:
+[root@server1 .ssh]#
+[root@server1 .ssh]# ssh server1 cat /root/.ssh/id_dsa.pub >> authorized_keys
+[root@server1 .ssh]#
+
+------ server 2----------------------------------------------------------------
+[root@server2 ~]# /usr/bin/ssh-keygen -t rsa
+[root@server2 ~]# /usr/bin/ssh-keygen -t dsa
+[root@server2 ~]# ssh server2 cat /root/.ssh/id_rsa.pub >> authorized_keys
+[root@server2 ~]# ssh server2 cat /root/.ssh/id_dsa.pub >> authorized_keys
+
+
+-- 확인 --
+[root@server1 .ssh]# scp authorized_keys server2:/root/.ssh/
+root@server2's password:
+authorized_keys                                                   100% 1012     1.1MB/s   00:00
+
+-- 암호 입력 없이 원격 복사 가능 --
+[root@server1 LABs]# scp sxid-4.20130802.tar.gz server2:/BACKUP
+sxid-4.20130802.tar.gz                                            100%  115KB  16.4MB/s   00:00
+[root@server1 LABs]# ssh server2
+Password:
+
+
+	# ~ centos 5 -> init process
+	# centos 6 ~ -> systemd process
+
+
+	# 원격 접속 도구 -> putty, moba -> noGUI
+	# GUI 원격 접속 도구 -> xmanager, vnc 구축
+
+
+	# 사용자 계정 및 그룹과 연관된 파일 및 디렉터리
+		1) /etc/passwd		계정인증파일
+		2) /etc/shadow		계정인증파일, 암호저장
+		3) /etc/group		모든 사용자는 반드시 특정 그룹에 소속된다. 그룹관리파일
+		4) /etc/default/useradd	사용자 추가 시 적용되는 기본 값
+		5) /etc/login.defs	UID/GID 생성시 사용되는 기본값, 암호 만료기간, 암호화
+		------------------------
+		6) /etc/skel		사용자 home에 포함되는 기본 환경 설정 파일 제공
+
+
+[root@server1 ~]# grep kevin /etc/shadow
+kevin:$6$AkWh.Av6$gMmS96eVZzVyGGPmZ5F0/YprwL.PaX9kjLxj.SUkuZY4GbE/yOJVFWP4UmCrmdrj0l3TWoGdUZ4IPo0tIyNrp0:19240:0:99999:7:::
+
+$6		-> 암호화 알고리즘 -> SHA512 -> $5(sha256), $2, $1(MD5)
+$AkWh.Av6	-> salt -> 난수 알고리즘
+$gMmS96eVZzVyGGPmZ5F0/YprwL.PaX9kjLxj.SUkuZY4GbE/yOJVFWP4UmCrmdrj0l3TWoGdUZ4IPo0tIyNrp0
+
+[root@server1 ~]# authconfig --test | grep hashing
+ password hashing algorithm is sha512
+[root@server1 ~]#
+[root@server1 ~]# authconfig --passalgo=md5 --update
+[root@server1 ~]# tail /etc/login.defs
+...
+ENCRYPT_METHOD MD5
+
+MD5_CRYPT_ENAB yes
+
+[root@server1 ~]# passwd kevin
+[root@server1 ~]# grep kevin /etc/shadow
+kevin:$1$g.Hu8Vjx$n/Mcd28XX.zhE.36vKzQD.:19240:0:99999:7:::
+
+[root@server1 ~]# authconfig --passalgo=sha512 --update
+[root@server1 ~]# authconfig --test | grep hashing
+ password hashing algorithm is sha512
+[root@server1 ~]# tail /etc/login.defs
+[root@server1 ~]# passwd kevin
+[root@server1 ~]# grep kevin /etc/shadow
+
+
+	# 정보보안 감사 -> 금일로부터 정직, 휴직, 해고 등의 사유로 출근하지 않는 자의 계정은
+			반드시 Lock 설정을 우선 수행한다.
+
+
+	# root 사용금지? superuser -> Unix/Linux의 무조건 관리자는 root
+
+		-> 해킹 시도의 시작? target에 port scan(nmap)
+					ㄴ hostname, OS 종류, process,...
+			-> 접근은 ID/Pass -> root/??? 
+
+		-> IT 월/분기/년 감사 -> 접근로그 -> root 흔적!
+
+	# pam (pluggable authentication modul)
+		
+
+
+	# 시나리오
+		devteam(3000)		devuser1~3
+		opsteam(4000)		opsuser1~3
+		devops1(5100)		devuser1, devuser2, opsuser1, opsuser2
+		devops2(5200)		devuser3, devuser4, opsuser3, opsuser4
+		adminteam(6000)		opsuser1, opsuser3
+--------------------------------------------------------------------------------
+[root@server1 ~]# groupadd -g 3000 devteam
+[root@server1 ~]# groupadd -g 4000 opsteam
+[root@server1 ~]# groupadd -g 5100 devops1
+[root@server1 ~]# groupadd -g 5200 devops2
+[root@server1 ~]# groupadd -g 6000 adminteam
+[root@server1 ~]# useradd -g 3000 -G 5100 devuser1
+[root@server1 ~]# useradd -g 3000 -G 5100 devuser2
+[root@server1 ~]# useradd -g 3000 -G 5200 devuser3
+[root@server1 ~]# useradd -g 3000 -G 5200 devuser4
+[root@server1 ~]# useradd -g 4000 -G 5100,6000 opsuser1
+[root@server1 ~]# useradd -g 4000 -G 5100 opsuser2
+[root@server1 ~]# useradd -g 4000 -G 5200,6000 opsuser3
+[root@server1 ~]# useradd -g 4000 -G 5200 opsuser4
+
+[root@server1 ~]# groupdel adminteam
+[root@server1 ~]# groupdel devteam
+groupdel: cannot remove the primary group of user 'devuser1'
+[root@server1 ~]# groupdel devops1
+[root@server1 ~]# groupdel devops2
+[root@server1 ~]# groupdel opsteam
+groupdel: cannot remove the primary group of user 'opsuser1'
+[root@server1 ~]# userdel -r devuser1
+[root@server1 ~]# userdel -r devuser2
+[root@server1 ~]# userdel -r devuser3
+[root@server1 ~]# userdel -r devuser4
+[root@server1 ~]# groupdel devteam
+[root@server1 ~]# userdel -r opsuser1
+[root@server1 ~]# userdel -r opsuser2
+[root@server1 ~]# userdel -r opsuser3
+[root@server1 ~]# userdel -r opsuser4
+[root@server1 ~]# groupdel opsteam
+
+
+
+	# 암호 규칙(정책) -> 대,소,특,숫 중 3(4) + 8글자 이상~
+		ㄴ P@ssW0rD -> 복잡성 정책
+		ㄴ ehowlahrdpwlswnahrrjfdl!
+	
+
+	# 업무적으로 필요한 권한만! 부여하시오. -> 최소 권한의 원칙 <> 권한의 남용
+
+	# jeff 사용자는 시스템을 끄고(shutdown), 재시작(reboot)할 수 있는 권한이 요구된다.
+
+
+
+
+---------------------- day05 --------------------------------
+
+	# RPM = S/W = package = program
+
+		기존 설치/배포 방법? compile version(C언어->gcc compiler)
+
+			-> (sXid) configure -> make -> make install
+				  (소스불러오기)  (실행파일로)   (설치)
+
+	# rpm 옵션 패키지명
+
+	-i	설치
+	-U	설치+업데이트
+	-v	verbose 설치/삭제 과정 표현 	-> -Uvh
+	-h	# hash 마크
+	-------------------------------------------------------
+	-q	조회
+	-a	all
+	-i	package 정보		-> -qa / -qi / -ql
+	-l	list 설치목록
+	-------------------------------------------------------
+	-e	삭제	-> 의존성 에러? -> --nodeps 추가
+
+	-> yum -> "online" package 설치/삭제/변경 도구 -> 공공프로젝트는 대부분 폐쇄망
+		ㄴ 필요한 패키지를 사전에 수집해서 USB 이전
+	   ㄴ RedHat 계열 -> CentOS, Amazon Linux 	-> yum
+	   ㄴ Debian 계열 -> Ubuntu, debian 		-> apt
+	   ㄴ alpine linux -> 경량의 리눅스 -> container	-> apk
+
+
+	# DB 구성 -> open source RDBMS -> MariaDB (yum)
+
+		1) MariaDB install	site -> repo -> 설치방법
+		2) 관리용 shellscript
+		3) workbench -> client tool 연결
+		4) SQL test를 위한 sample schema 구축 -> script 제공
+
+
+https://downloads.mariadb.org/mariadb/repositories
+
+[root@server1 ~]# cd /etc/yum.repos.d/
+[root@server1 yum.repos.d]# vi MariaDB.repo
+[root@server1 yum.repos.d]# yum install MariaDB-server MariaDB-client -y
+
+[root@server1 ~]# systemctl enable mariadb
+[root@server1 ~]# systemctl daemon-reload
+[root@server1 ~]# systemctl start mariadb
+[root@server1 ~]# systemctl status mariadb
+[root@server1 ~]# ps -ef | grep mysql
+mysql    20242     1  0 18:20 ?        00:00:00 /usr/sbin/mysqld
+[root@server1 ~]# fw_enable.sh
+input service:
+mysql
+input port:
+3306
+input protocol[tcp|udp]:
+tcp
+[root@server1 ~]# netstat -nlp | grep 3306
+tcp6       0      0 :::3306
+
+[root@server1 ~]# mysql -uroot
+MariaDB [(none)]> show databases;
+
+[root@server1 ~]# /usr/bin/mysql_secure_installation
+Enter current password for root (enter for none): (엔터)
+Set root password? [Y/n] Y
+New password:
+Re-enter new password:
+Remove anonymous users? [Y/n] Y
+Disallow root login remotely? [Y/n] n
+Remove test database and access to it? [Y/n] Y
+Reload privilege tables now? [Y/n] Y
+
+[root@server1 ~]# mysql -uroot -p
+Enter password:
+
+------------------------------------
+[root@server2 bin]# vi mariadb_check.sh
+#!/bin/bash
+echo -n "MariaDB password : "
+  stty -echo
+read mariadbpw
+  stty echo
+while :
+do
+echo '
+   1. MariaDB Process list:
+   2. MariaDB connection:
+   3. show database:
+   4. exit: '
+echo -n "Enter Number: "
+read no
+case $no in
+    "1" )         echo "show processlist;" | mysql -u"root" -p"$mariadbpw" ;;
+    "2" )         mysql -u"root" -p"$mariadbpw" ;;
+    "3" )         echo "show databases;" | mysql -u"root" -p"$mariadbpw" ;;
+    "4" )         exit 33;;
+esac
+  echo
+done
+
+
+
+	# SQL(Structured Query Language): 구조적 질의어(조회)
+	  ㄴ select			    ㄴ Table은 행(row, data)과
+						    열(colume, structure)의 집합(set)
+
+
+	# elasticsearch (검색엔진 DB) -> json 구조 -> 표준SQL 지원
+
+
+[root@server01 ~]# mysql -u root –p
+MariaDB [(none)]> create database hrdb;
+MariaDB [(none)]> show databases;
+MariaDB [(none)]> grant all privileges on hrdb.*
+    -> to hr_admin@'%' identified by 'password'
+    -> with grant option;
+MariaDB [(none)]> flush privileges;
+MariaDB [(none)]> exit;
+
+[root@server01 ~]# vi hr_info.sql
+
+[root@server01 ~]# mysql -u hr_admin -p hrdb 
+Enter password: (password)
+
+MariaDB [hrdb]> status;
+MariaDB [hrdb]> source hr_info.sql
+…
+MariaDB [hrdb]> show tables;	-> 8개 테이블 생성+데이터
+MariaDB [hrdb]> desc employees;
+MariaDB [hrdb]> select * from employees;
+
+
+Exam1) 업무별 전체 급여 합계 중 $13000 보다 큰 것만 
+출력하시오. 단, 업무에 REP가 포함된 것은 제외하고,
+전체 급여에 대한 내림차순 정렬을 수행하시오.
+MariaDB [hrdb]> select job_id, sum(salary)
+    -> from employees
+    -> where job_id not like '%REP%'
+    -> group by job_id
+    -> having sum(salary) > 13000
+    -> order by sum(salary) desc;
+
++---------+-------------+
+| job_id  | sum(salary) |
++---------+-------------+
+| AD_VP   |       34000 |
+| AD_PRES |       24000 |
+| IT_PROG |       19200 |
++---------+-------------+
+3 rows in set (0.002 sec)
+
+
+[Exam2]
+도시 이름이 'T' 로 시작하는 지역에 사는 사원들의 사번, LAST_NAME 및 부서 번호를 조회하는 subquery를 작성하세요. (employees, departments, locations)
+use hrdb;
+
+SELECT   employee_id, last_name, department_id
+FROM	employees
+WHERE	department_id in (
+			select  department_id
+			from    departments
+			where  location_id in (
+					 select  location_id
+					 from    locations
+					 where  city like 'T%'));
+
+[Exam3]
+각 부서명, 지역번호 및 부서별 근무인원을 출력하시오. 단, 부서 배치가 되지 않은 근무 인원 또한 포함한다. (employees, departments)
+use hrdb;
+
+SELECT	d.department_id
+	, d.department_name
+	, d.location_id
+	, count(e.employee_id)
+FROM	employees e LEFT OUTER JOIN departments d
+ON	e.department_id = d.department_id
+GROUP BY d.department_id, d.department_name, d.location_id;
+
+[Exam4]
+모든 사원에 대해 사원 번호, 성, 급여, 부서 번호 및 해당 부서의 평균 급여를 표시하는 보고서를 작성하시오. (employees) → join과 subquery 기법 사용
+use hrdb;
+
+SELECT	E1.last_name, E1.salary, E1.department_id, E2.avgsal 
+    FROM employees E1, (SELECT department_id, 
+                               round(avg(salary)) as avgsal 
+                        FROM    employees
+                        GROUP BY department_id) E2 
+  WHERE E1.department_id = E2.department_id;
+
+[Exam5]
+요일 (월,화,수요일...) 별 고용된 인원이 가장 많은 요일과 동일한 요일에 고용된 모든 사람들의 LAST_NAME 및 요일을 조회하시오.
+use hrdb;
+SELECT	last_name, date_format(hire_date, '%w') as day,
+		CASE DAYOFWEEK(hire_date)
+		WHEN '1' THEN '일요일'
+		WHEN '2' THEN '월요일'
+		WHEN '3' THEN '화요일'
+		WHEN '4' THEN '수요일'
+		WHEN '5' THEN '목요일'
+		WHEN '6' THEN '금요일'
+		WHEN '7' THEN '토요일'
+		END AS '요일'
+FROM	employees
+WHERE	date_format(hire_date, '%w') = (
+                                 		select	date_format(hire_date, '%w')
+                                   		from	employees
+                                   		group	by date_format(hire_date, '%w')
+                                   		having count(*) = (
+                                                  		   select max(cnt_week)
+                                                           from (select count(*) as 'cnt_week'
+																from	employees 
+																group by 	date_format(hire_date, '%w')) week_cnt_tab));
+
+
+
+
+	# FS
+
+	server는 disk -> hotswap 방식
+
+-> Disk 추가 후 booting
+[root@server1 ~]# fdisk -l
+/dev/sdb
+[root@server1 ~]# fdisk /dev/sdb
+Command (m for help): n
+Select (default p): p
+Partition number (1-4, default 1): 1
+First sector (2048-20971519, default 2048): 엔터
+Last sector, +sectors or +size{K,M,G} (2048-20971519, default 20971519): 엔터
+Command (m for help): w
+
+[root@server1 ~]# fdisk -l
+/dev/sdb1(FS) <---> directory
+[root@server1 ~]# mkfs.xfs /dev/sdb1
+[root@server1 ~]# mkdir /KAKAO1
+[root@server1 ~]# mount /dev/sdb1 /KAKAO1
+[root@server1 ~]# df -h
+/dev/sdb1        10G   33M   10G   1% /KAKAO1
+
+[root@server2 ~]# blkid
+[root@server2 ~]# vi /etc/fstab
+[root@server2 ~]# reboot
+[root@server2 ~]# df -h
+/dev/sdb1        10G   33M   10G   1% /KAKAO2
+
+
+	# 팀 프로젝트1 (pilot project) -> 1팀 선정
+	# 리눅스 평가 -> 성적 우수자 5명
+
+	10명 (3층 카페 이용권 * 3장)
+
+
+	# NFS -> 서버간 공유 -> /KAKAO1-----(NFS)-----/KAKAO2
+
+[root@server1 ~]# vi /etc/exports
+/KAKAO1 *(rw,sync,all_squash,anonuid=0,anongid=0)
+[root@server1 ~]# systemctl restart nfs
+[root@server1 ~]# systemctl status nfs
+[root@server1 ~]# exportfs -v
+[root@server1 ~]# fw_enable.sh
+input service:
+nfs
+input port:
+2049
+input protocol[tcp|udp]:
+tcp
+----------------------------------------------------
+[root@server2 ~]# umount /KAKAO2
+[root@server2 ~]# vi /etc/fstab
+#UUID=07a50dff-5a5e-4b60-b9b3-69498ccc671d /KAKAO2
+server1:/KAKAO1                /KAKAO2                nfs     defaults        0 0
+[root@server2 LABs]# ./fw_enable.sh
+[root@server2 LABs]# mount /KAKAO2
+[root@server2 LABs]# df -h
+server1:/KAKAO1   10G   32M   10G   1% /KAKAO2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
