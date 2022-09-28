@@ -1,0 +1,540 @@
+######################################
+카카오스쿨 클라우드 기반 개발자과정 - Docker
+######################################
+
+
+
+# Docker 환경 구성
+
+
+	# OS vs. App 반드시 서로 다른 Disk로 분리한다!
+
+	/dev/sda	/ OS
+	/dev/sdb	/var/lib/docker
+
+
+	$ sudo apt -y install vim
+	$ sudo apt -y install openssh-server	-> putty 연결
+	$ sudo vi /etc/hosts
+	127 ~
+	127 ~
+	192.168.56.101	hostos1
+	192.168.56.102	hostos2
+
+	$ sudo shutdown -h now
+	-- VM 복제
+
+	2번서버
+	$ sudo hostnamectl set-hostname hostos2
+	$ sudo reboot
+
+
+	# container 실체
+	
+	from image -> OS~App~source 모두 포함된 하나의 패키징 -> OCI
+
+	-> docker run -d -m=100m -p 8001:80 --name=myweb nginx:1.23-alpine
+
+		1) image의 snapshot -> /var/lib/docker 저장 -> 하나의 image * N(con)
+
+		2) image(정적) vs container(동적)
+				  ㄴ Process 다! -> ps -ef | grep ??? 	
+	
+	a) chroot -> PID=1이 존재하지만 systemd가 아닌 container 자체가 PID=1 소유 -> OS
+			-> 별도의 prompt 존재
+			-> /
+			-> 독립된 영역 = 격리된 영역(fw)
+	+ fuse(filesystem userspace) package -> /data 디렉터리를 mount -> daemon실행
+
+	b) cgroup -> 컨테이너에 자원 할당 커널 기술 -> 4대 resource (cpu, memory, disk)
+			ㄴ unlimit -> 제한!	
+				         sandbox  	
+	c) namespace -> network ns(-> (NIC, IP, Mac), IPC,...) mount, UID
+
+
+	# docker engine
+
+	- dockerd -> docker CLI(명령어) 수행
+             | (docker.sock)
+	- containerd -> container lifecycle management
+             |
+	- runC -> container 생성
+             |
+	------------ docker engine-------------------
+                             |
+	HostOS(ubuntu) -> kernel -> LXC기술
+
+
+	# docker installation
+
+	-> 전제조건? kernel version 3.1~ , 64bit
+
+kevin@hostos1:~$ uname -ar
+kevin@hostos1:~$ sudo apt -y update
+kevin@hostos1:~$ sudo apt -y install \
+> apt-transport-https \
+> ca-certificates \
+> curl \
+> software-properties-common
+
+kevin@hostos1:~$ sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+kevin@hostos1:~$ sudo apt-key fingerprint
+kevin@hostos1:~$ sudo add-apt-repository \
+> "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+> $(lsb_release -cs) stable"
+
+kevin@hostos1:~$ tail /etc/apt/sources.list
+kevin@hostos1:~$ sudo apt -y update
+kevin@hostos1:~$ apt-cache policy docker-ce
+docker-ce:
+  Installed: (none)
+  Candidate: 5:20.10.17~3-0~ubuntu-focal
+
+kevin@hostos1:~$ sudo apt -y install docker-ce
+kevin@hostos1:~$ sudo docker version
+kevin@hostos1:~$ sudo usermod -aG docker kevin
+kevin@hostos1:~$ sudo systemctl daemon-reload
+kevin@hostos1:~$ sudo systemctl enable docker
+kevin@hostos1:~$ sudo systemctl restart docker
+kevin@hostos1:~$ sudo reboot
+---
+kevin@hostos1:~$ docker version
+
+
+
+
+	# 개발팀으로부터 요청 -> ubuntu 18.04 버전에 특정 application을 실행하고자 한다. 
+				-> image 생성해 주세요. -> 1) Dockerfile
+				-> 2) ubuntu image download(pull) -> docker run -> container
+				-> docker exec ~ -> /   PID=1(own)   host(ps)
+					-> chroot / cgroup / namespace
+				-> 직접 패키지 설치 (모든 image는 기본적으로 online package 설치 가능)
+							ㄴ centso(yum), ubuntu(apt)
+							ㄴ apt -y update 우선 수행!
+		이미지:태그
+		ubuntu:18.04
+
+
+		image = layer * N	-> build time -> line(명령줄) -> Step * N = layer * N
+					-> 정지된 컨테이너와 같다. -> class와 같다.
+		-----------------------------------------------------------------------------
+		container run		-> Run tim
+
+-- 터미널 1 (ubuntu:18.04)
+kevin@hostos1:~$ docker run -it ubuntu:18.04 bash
+root@dadee9b40583:/# pwd
+root@dadee9b40583:/# ps -ef
+UID          PID    PPID  C STIME TTY          TIME CMD
+root           1       0  0 05:00 pts/0    00:00:00 bash
+root@dadee9b40583:/# cat /etc/os-release 
+root@dadee9b40583:/# apt -y update
+root@dadee9b40583:/# apt -y install net-tools
+root@dadee9b40583:/# ifconfig
+        inet 172.17.0.2  			---> ???
+root@dadee9b40583:/# apt -y install iputils-ping
+root@dadee9b40583:/# ping 192.168.56.1   	---> ok ---> 유지
+
+-- 터미널 2 (centos:7 image) 
+kevin@hostos1:~$ docker pull centos:7  centos8
+kevin@hostos1:~$ docker images
+kevin@hostos1:~$ docker run -it centos:7 bash
+
+ 	-> IP 확인
+	-> ping 192.168.56.1 ??? / ping 172.17.0.2 -> ok  ---> 유지
+
+-- 터미널 3
+kevin@hostos1:~$ docker ps	-> 2개의 컨테이너 확인
+
+
+
+
+kevin@hostos1:~$ docker pull mysql:5.7-debian
+kevin@hostos1:~$ docker run -it -e MYSQL_ROOT_PASSWORD=pass123# mysql:5.7-debian bash
+root@164f578fd0de:/# cat /etc/os-release
+root@164f578fd0de:/# /etc/init.d/mysql start
+root@164f578fd0de:/# mysql -uroot -p
+Enter password:
+mysql> show databases;
+
+# mariadb:10.2의 DB를 컨테이너 실행하고, item 이라는 데이터베이스에 workbench로 연결하고자 한다.
+			ㄴ MARIADB_ROOT_PASSWORD=pass123#
+			ㄴ MARIADB_DATABASE=item
+			ㄴ -p 13306:3306
+kevin@hostos1:~$ docker run -d -e MARIADB_ROOT_PASSWORD=pass123# -e MARIADB_DATABASE=item \
+> --name=itemdb -p 13306:3306 mariadb:10.2
+
+kevin@hostos1:~$ docker ps
+CONTAINER ID   IMAGE              COMMAND           CREATED          STATUS    PORTS      NAMES
+eae4878d17fb   mariadb:10.2       "docker-entrypoint.s…"   24 seconds ago   Up 21 seconds   0.0.0.0:13306->3306/tcp, :::13306->3306/tcp   itemdb
+
+kevin@hostos1:~$ sudo netstat -nlp | grep 13306
+tcp        0      0 0.0.0.0:13306           0.0.0.0:*       LISTEN      4769/docker-proxy
+
+kevin@hostos1:~$ ps -ef | grep 4769
+root        4769     966  0 15:05 ?        00:00:00 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 13306 -container-ip 172.17.0.3 -container-port 3306
+
+kevin@hostos1:~$ docker exec -it itemdb bash
+root@eae4878d17fb:/# mysql -uroot -p
+Enter password:
+MariaDB [(none)]> show databases;
+| item               |
+
+root@b700d761a7b5:~# mysql -uroot -p
+Enter password: (pass123#)
+MariaDB [(none)]> create database empdb;
+MariaDB [(none)]> show databases;
+MariaDB [(none)]> grant all privileges on empdb.*
+    -> to emp_admin@localhost identified by 'docker_4U'
+    -> with grant option;
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON empdb.* TO emp_admin@'%' \
+>                 IDENTIFIED BY 'docker_4U';
+MariaDB [(none)]> SELECT user,host FROM mysql.user;
+MariaDB [(none)]> flush privileges;
+MariaDB [(none)]> exit;
+root@b700d761a7b5:/# apt-get update
+root@b700d761a7b5:/# apt-get install git -y
+root@b700d761a7b5:/# git clone https://github.com/brayanlee/emp_db.git
+root@b700d761a7b5:/# cd emp_db/ 
+[root@b700d761a7b5 emp_db]# ls
+[root@b700d761a7b5 emp_db]# mysql -u emp_admin -p empdb
+Enter password: (docker_4U)
+MariaDB [empdb]> status;
+MariaDB [empdb]> source employees.sql	# 수십만건의 over workload 발생
+MariaDB [empdb]> show tables;
+MariaDB [empdb]> select * from dept_emp;
+----------------------------------------------
+# 확인 사항 -> 	Cadvisor 실시간 workload 확인.
+		workbench를 이용한 query test.
+----------------------------------------------
+
+
+
+
+
+
+
+
+
+kevin@hostos1:~$ docker run \
+>   --volume=/:/rootfs:ro \
+>   --volume=/var/run:/var/run:rw \
+>   --volume=/sys:/sys:ro \
+>   --volume=/var/lib/docker/:/var/lib/docker:ro \
+>   --publish=9559:8080 \
+>   --detach=true \
+>   --name=cadvisor \
+>   google/cadvisor:latest
+
+kevin@hostos1:~$ sudo netstat -nlp | grep 9559
+kevin@hostos1:~$ docker ps
+CONTAINER ID   IMAGE                    COMMAND                  CREATED              STATUS              PORTS                                         NAMES
+5076412aac6c   google/cadvisor:latest   "/usr/bin/cadvisor -…"   About a minute ago   Up About a minute   0.0.0.0:9559->8080/tcp, :::9559->8080/tcp     cadvisor
+	
+  (win)
+0.0.0.0:9559->8080/tcp	-> IPv4		---> process? docker-proxy
+:::9559->8080/tcp	-> IPv6
+
+
+	# container best practice!
+	1) 경량 컨테이너를 위한 image 선택은 tag -> slim, alpine
+
+
+	# Nginx -> 웹서버, 웹서비스, proxy -> LB ---> /etc/nginx/nginx.conf 수정
+
+LAB1)
+kevin@hostos1:~$ docker pull nginx:1.23.1-alpine
+kevin@hostos1:~$ docker images | grep nginx
+nginx             1.23.1-alpine   804f9cebfdc5   4 weeks ago     23.5MB
+kevin@hostos1:~$ docker run -d --name=myweb1 -p 8001:80 nginx:1.23.1-alpine
+kevin@hostos1:~$ docker ps
+CONTAINER ID   IMAGE                    COMMAND                  CREATED             STATUS             PORTS                                         NAMES
+ee97bc898445   nginx:1.23.1-alpine      "/docker-entrypoint.…"   2 minutes ago       Up 2 minutes       0.0.0.0:8001->80/tcp, :::8001->80/tcp         myweb1
+
+kevin@hostos1:~$ sudo netstat -nlp | grep 8001
+tcp        0      0 0.0.0.0:8001            0.0.0.0:*         LISTEN      6682/docker-proxy
+
+kevin@hostos1:~$ ps -ef | grep 6682
+root        6682     966  0 16:03 ?        00:00:00 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.00 -host-port 8001 -container-ip 172.17.0.5 -container-port 80
+
+kevin@hostos1:~$ curl localhost:8001
+
+http://192.168.56.101:8001/
+
+kevin@hostos1:~$ docker stats myweb1
+
+
+LAB2) 개발팀으로부터 제공받은 소스로 테스트
+
+kevin@hostos1:~/LABs/nginx-test$ vi index.html
+kevin@hostos1:~/LABs/nginx-test$ docker cp index.html myweb1:/usr/share/nginx/html/index.html
+
+kevin@hostos1:~/LABs/nginx-test$ docker cp index2.html myweb1:/usr/share/nginx/html/index.html
+kevin@hostos1:~/LABs/nginx-test$ docker cp docker_logo.png myweb1:/usr/share/nginx/html/docker_logo.png
+
+
+LAB3) 
+	- 개발팀으로부터 개발 소스를 제공 받음
+	- 해당 application을 실행할 수 있는 image를 이용하여 소스와 함께 Dockerfile 작성
+	- build time -> image 생성
+	- docker run 생성한image
+kevin@hostos1:~/LABs/nginx-test$ vi Dockerfile
+FROM nginx:1.23.1-alpine
+COPY index2.html /usr/share/nginx/html/index.html
+COPY docker_logo.png /usr/share/nginx/html/docker_logo.png
+EXPOSE 80/tcp
+CMD ["nginx", "-g", "daemon off;"]
+
+kevin@hostos1:~/LABs/nginx-test$ docker build -t myweb:1.0 .
+
+kevin@hostos1:~/LABs/nginx-test$ docker images | grep myweb
+myweb             1.0             74e0613c5713   21 seconds ago   23.6MB
+
+kevin@hostos1:~/LABs/nginx-test$ docker run -d -p 8002:80 --name=myweb2 myweb:1.0
+kevin@hostos1:~/LABs/nginx-test$ curl localhost:8002
+
+kevin@hostos1:~/LABs/nginx-test$ vi index2.html
+kevin@hostos1:~/LABs/nginx-test$ docker cp index2.html myweb2:/usr/share/nginx/html/index.html
+
+
+LAB4) 강사로부터 개발완료된 소스를 제공 받는다. 이 소스를 포함하는 nginx 기반의 myweb:2.0 build 하시오.
+      반드시 image build 후 생성된 image로 container 실행 테스트를 수행해야 한다. -> image validattion check
+      그 후 public or private registry에 해당 image를 팀에 공유한다.
+
+
+kevin@hostos1:~/LABs$ mkdir stylish-portfolio && cd $_
+kevin@hostos1:~/LABs/stylish-portfolio$ vi index.html	-> "희재,기빈 portfolio"
+kevin@hostos1:~/LABs/stylish-portfolio$ vi Dockerfile
+FROM nginx:1.23.1-alpine
+RUN mkdir -p /usr/share/nginx/html/assets
+RUN mkdir -p /usr/share/nginx/html/css
+RUN mkdir -p /usr/share/nginx/html/js
+COPY assets /usr/share/nginx/html/assets
+COPY
+COPY
+COPY
+EXPOSE 80/tcp
+CMD ["nginx", "-g", "daemon off;"]
+
+
+
+
+
+
+
+
+
+-------------------------------- day03 ---------------------------------
+
+
+	# python
+		1) 일반 프로그래밍
+		2) 웹 프로그래밍 (socket)
+		3) bigdata 분석
+		4) ML/DL/AI
+
+http://192.168.56.101:8888/lab?token=9ddc2d0949225ba11682f73d7b1f2c5bd71ad493cd2d17a0
+
+https://www.google.co.kr/maps/place/%EC%84%9C%EC%9A%B8%EC%88%B2/data=!4m5!3m4!1s0x357ca49c90bcb7b9:0x9a2a7df695710176!8m2!3d37.543655!4d127.044703?hl=ko
+
+37.543655
+127.044703
+
+import folium
+!pip install folium
+
+seoulforest=folium.Map(location=[37.544392,127.0352537], zoom_start=15)
+folium.Marker([37.544392,127.0352537], popup='서울숲공원').add_to(seoulforest)
+folium.CircleMarker([37.544392,127.0352537], radius=50,
+                   popup='서울숲공원', color='#3186cc',
+                   fill_color='#3186cc',).add_to(seoulforest)
+seoulforest
+
+
+	# mongoDB -> humongous -> 거대한 -> bigdata (무작위 데이터)
+
+
+	docker pull mongo:5
+	docker run ... -p 27017:27017
+				(EXPOSE)
+
+	
+	docker pull mongo:5 -> docker info
+	docker pull docker.io/library/mongo:5
+	-----------------------------------------------
+	docker pull gcr.io/google-samples/hello-app:1.0
+	-----------------------------------------------
+	docker pull 192.168.56.200:5000/myweb:1.0
+
+	--> docker pull 하기 전! hub.docker.com에서 해당 image 정보 확인! -> 비추! latest
+
+
+
+kevin@hostos1:~$ docker pull httpd:2.4
+kevin@hostos1:~$ docker images | grep httpd
+
+kevin@hostos1:~$ docker image history httpd:2.4
+kevin@hostos1:~$ docker image history httpd:2.4 --no-trunc
+kevin@hostos1:~$ docker image history httpd:2.4 --no-trunc > httpd_dockerfile.txt
+
+	# image는 layer 즉, 계층구조의 집합 형태다. -> layer단위로 download -> merged -> snapshot
+
+	# container의 실체
+		1) image의 snapshot 이다. -> /var/lib/docker~
+		2) process 다.
+		3) image는 container의 infra(H/W->cgroup, OS)를 제공한다.
+
+
+kevin@hostos1:~$ docker image inspect httpd:2.4
+
+	-> Dockerfile로 image build를 통해 image 생성, image는 불변! -> container만 RW
+		ㄴ 라인 수 -> Step -> layer
+		ㄴ build 과정은 image -> container -> image -> container ... 연속
+
+
+
+	# image 삭제 전 반드시 참조 중인 contianer는 없어야 한다. 강제 삭제도 가능 --force
+kevin@hostos1:~$ docker stop py-test
+kevin@hostos1:~$ docker rm py-test
+kevin@hostos1:~$ docker image rm python:3.8-slim = docker rmi python:3.8-slim
+
+
+	# docker ps -> mysql, mariadb image를 삭제 하시오.
+	1) docker rmi ??
+	2) docker stop ??
+	3) docker rm cid cid cid cid...
+	4) docker rmi ??
+
+# 1,2번 서버에 모두 설정
+kevin@hostos1:~$ docker rm $(docker ps -a -q --filter 'status=exited')
+kevin@hostos1:~$ alias cexrm='docker rm $(docker ps -a -q --filter 'status=exited')'
+kevin@hostos1:~$ vi .bashrc
+...
+# for example
+alias cexrm='docker rm $(docker ps -a -q --filter 'status=exited')'
+
+kevin@hostos1:~$ source .bashrc
+kevin@hostos1:~$ alias
+...
+alias cexrm='docker rm $(docker ps -a -q --filter status=exited)'
+
+
+	# registry에 생성한 image upload(push)
+	1) docker login / logout -> 계정자에게 push 하기 위해.. -> docker.io/dbgurum
+	2) docker image tag -> why? 업로드할 주소 입력을 위해 작성
+	3) docker push 계정자ID/저장소:태그
+		       dbgurum/이미지명:버전 -> 주소		-> 태그는 버전관리 차원으로 활용한다!
+
+kevin@hostos1:~$ docker image tag myweb:1.0 dbgurum/myweb:1.0
+kevin@hostos1:~$ docker push dbgurum/myweb:1.0
+
+LAB) 본인이 보유한 myweb:2.0 , phpserver:1.0을 본인 Repositories에 push 하시오.
+	확인1) hostos2 에서 docker pull
+	확인2) 파트너의 업로드된 image pull
+
+-- 무료 계정 사용시 -> 200회 제한, GW IP에 대한 제한
+Error response from daemon: toomanyrequests: You have reached your pull rate limit. You may increase the limit by authenticating and upgrading: https://www.docker.com/increase-rate-limit
+
+
+	# docker run = [pull] + create + start + [command]
+
+	# kubectl run | create
+
+
+
+	kevin@hostos1:~$ docker run --help
+
+	-i		interactive
+	-t		tty(단말)		-it (작업수행)
+	-d		detach(백그라운드로 실행 -> nginx -> -d)
+	-p		publish host_port:container_port
+	-e		환경변수 -> DB
+			다수 환경변수 사용 시 -> -e ... -e ... -e ...
+			-> env_list 파일에 환경변수 저장 -> --env-file=env_list
+	--restart=	always | ... -> 사용자 stop이 아닌 예기치 않은 컨테이너 종료 시 자동 재시작!
+			기본값=no
+			※ kubernetes는 기본값이 restart=Always로 되어 있음. -> auto-healing
+	--name		컨테이너 이름
+	--rm		container stop과 동시에 자동 rm 수행 -> test용 container에 적합
+	-u		컨테이너 기본 사용자는 root, 특정 계정에서 application 수행 시 -u=kevin
+	-w		workdir와 같이 컨테이너 내부 접속 시 연결되는 경로 지정
+	-v		볼륨 지정(NFS와 유사, container to host, container to container)
+
+
+
+kevin@hostos1:~$ docker run \
+>   --volume=/:/rootfs:ro \
+>   --volume=/var/run:/var/run:rw \
+>   --volume=/sys:/sys:ro \
+>   --volume=/var/lib/docker/:/var/lib/docker:ro \
+>   --publish=9559:8080 \
+>   --detach=true \
+>   --name=cadvisor \
+>   --restart=always \
+>   google/cadvisor:latest
+
+
+
+kevin@hostos1:~$ docker run -d --rm centos /bin/ping localhost
+kevin@hostos1:~$ docker logs -f 9df56760579b  ->  kubectl logs pod_name
+kevin@hostos1:~$ docker stop 9df56760579b
+
+
+
+	# container가 사용중인 자원 소비량을 측정한 결과(data) -> metric -> cadvisor를 통해 모니터링
+								   ㄴ docker stats nginx
+	
+	
+kevin@hostos1:~/LABs$ docker run -d --name=myweb1 -p 8001:80 myweb:1.0
+187e0d0ee5fdefe8a92212d01ba77bb19f614e6f26101e772f8a0c99a90876e8
+kevin@hostos1:~/LABs$ docker ps
+CONTAINER ID   IMAGE                    COMMAND                  CREATED         STATUS          P     ORTS                                       NAMES
+187e0d0ee5fd   myweb:1.0                "/docker-entrypoint.…"   2 seconds ago   Up 1 second     0     .0.0.0:8001->80/tcp, :::8001->80/tcp       myweb1
+5076412aac6c   google/cadvisor:latest   "/usr/bin/cadvisor -…"   5 days ago      Up 13 minutes   0     .0.0.0:9559->8080/tcp, :::9559->8080/tcp   cadvisor
+kevin@hostos1:~/LABs$ docker port myweb1
+80/tcp -> 0.0.0.0:8001
+80/tcp -> :::8001
+kevin@hostos1:~/LABs$ docker top myweb1
+UID                 PID                 PPID                C                   STIME                    TTY                 TIME                CMD
+root                2995                2974                0                   16:17                    ?                   00:00:00            nginx: master process nginx -g daemon off;
+systemd+            3051                2995                0                   16:17                    ?                   00:00:00            nginx: worker process
+systemd+            3052                2995                0                   16:17                    ?                   00:00:00            nginx: worker process
+systemd+            3053                2995                0                   16:17                    ?                   00:00:00            nginx: worker process
+systemd+            3054                2995                0                   16:17                    ?                   00:00:00            nginx: worker process
+
+
+kevin@hostos1:~$ docker restart myweb2
+kevin@hostos1:~$ docker pause myweb2
+kevin@hostos1:~$ docker unpause myweb2
+kevin@hostos1:~$ docker rename myweb2 mywebserver2
+kevin@hostos1:~$ docker attach mycent
+
+
+
+	# 팀 과제
+	  ㄴ 주제: 가상의 설계도 작성
+	  ㄴ 내용: Linux pilot project를 통해 구현된 "5가지 기술"를 하나의 가상 회사에서 사용한다는 가정
+	  ㄴ 작성: draw.io / ppt 를 통해 설계도 구현 후 speech
+	  ㄴ 발표: 9/15(목)
+
+
+
+
+
+
+# Pilot 프로젝트 기술인터뷰 대상자
+
+김남주
+정지윤
+신재민
+김석주
+
+
+
+
+
+
+
+
+
+
+
