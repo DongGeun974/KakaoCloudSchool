@@ -1,0 +1,392 @@
+##################
+ ELK
+##################
+
+-- Prerequired --
+1) 제공한 압축파일을 D:\kakao_ELK에 압축해제
+2) VM에 동일 이름으로 생성 -> CPU(4) / Memory(6G)
+3) hostname 변경 -> elk-master, IP -> 192.168.56.101 ---> /etc/hosts 추가 설정
+4) yum upate -> shutdown
+5) 복제 -> D:\kakao_ELKapp -> CPU(2) / Memory(4G)
+6) hostname 변경 -> elk-app, IP -> 192.168.56.102 ---> /etc/hosts 추가 설정
+7) putty에 연결 후 대기...
+
+
+
+
+	# Elasticsearch -> OpenSearch -> Cluster(분산) -> 성능 유지
+					ㄴ k8s, EMR, Elasticsearch, ...
+
+		Master node -> 제어, 관리, 헬스체크...
+			- Data node 		-> 빠른 검색을 위한 data 
+			- UltraWarm node	-> IA 검색을 위한 data	
+			- Cold node		-> store data
+
+
+
+
+
+
+[root@elk-master ~]# yum list java*jdk-devel
+[root@elk-master ~]# rpm -ql java-1.8.0-openjdk
+
+/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre
+
+[root@elk-master ~]# java -version
+[root@elk-master ~]# vi /etc/profile
+
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre
+export PATH=$PATH:$JAVA_HOME/bin
+export CLASSPATH='.'
+
+[root@elk-master ~]# source /etc/profile
+[root@elk-master ~]# echo $JAVA_HOME
+
+~]# rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+~]# yum -y install elasticsearch-7.10.2-1 logstash-7.10.2-1 kibana-7.10.2-1
+
+
+
+/etc/elasticsearch
+/usr/share/elasticsearch
+
+[root@elk-master ~]# ls -l /var/lib/elasticsearch/
+[root@elk-master ~]# ls -l /var/log/elasticsearch/
+
+
+
+
+
+[root@elk-master ~]# vi /etc/elasticsearch/elasticsearch.yml
+
+[root@elk-master ~]# vi /etc/logstash/logstash.yml
+
+[root@elk-master ~]# vi /etc/kibana/kibana.yml
+
+
+[root@elk-master ~]# systemctl daemon-reload
+
+[root@elk-master ~]# systemctl enable elasticsearch.service
+[root@elk-master ~]# systemctl start elasticsearch.service
+[root@elk-master ~]# systemctl status elasticsearch.service
+[root@elk-master ~]# chkconfig --add elasticsearch
+
+[root@elk-master ~]# systemctl enable logstash.service
+[root@elk-master ~]# systemctl start logstash.service
+[root@elk-master ~]# systemctl status logstash.service
+[root@elk-master ~]# chkconfig --add logstash
+
+[root@elk-master ~]# systemctl enable kibana.service
+[root@elk-master ~]# systemctl start kibana.service
+[root@elk-master ~]# systemctl status kibana.service
+[root@elk-master ~]# chkconfig --add kibana
+
+[root@elk-master ~]# ps -ef | grep elasticsearch
+[root@elk-master ~]# ps -ef | grep logstash
+[root@elk-master ~]# ps -ef | grep kibana
+
+[root@elk-master ~]# curl -XGET localhost:9200   ---> 192.168.56.101:9200
+
+[root@elk-master ~]# systemctl start firewalld.service
+[root@elk-master ~]# firewall-cmd --add-port=9200/tcp --permanent --zone=public
+success
+[root@elk-master ~]# firewall-cmd --add-port=9300/tcp --permanent --zone=public
+success
+[root@elk-master ~]# firewall-cmd --add-port=5443/udp --permanent --zone=public
+success
+[root@elk-master ~]# firewall-cmd --add-port=5443/tcp --permanent --zone=public
+success
+[root@elk-master ~]# firewall-cmd --add-port=5601/tcp --permanent --zone=public
+success
+[root@elk-master ~]# firewall-cmd --reload
+success
+[root@elk-master ~]# firewall-cmd --list-all
+
+-- kibana
+http://192.168.56.101:5601/
+
+
+[LAB] system에 접근한 세션의 실패 기록 정보를 정제()하여 저장()하고 시각화() 한다.
+
+
+	# logstash -> pipeline -> input() --- filter() --- output()
+
+[root@ktds ~]# vi /etc/logstash/conf.d/sshd.conf
+input {
+  file {
+    type => "secure_log"
+    path => "/var/log/secure"
+  }
+}
+
+filter {
+  grok {
+    add_tag => [ "sshd_fail" ]
+    match => { "message" => "Failed %{WORD:sshd_auth_type} for %{USERNAME:sshd_invalid_user} from %{IP:sshd_client_ip} port %{NUMBER:sshd_port} %{GREEDYDATA:sshd_protocol}" }
+  }
+}
+
+output {
+  elasticsearch {
+    index => "sshd_fail-%{+YYYY.MM}"
+  }
+}
+
+[root@elk-master ~]# chgrp logstash /var/log/secure
+[root@elk-master ~]# chmod 640 /var/log/secure
+[root@elk-master ~]# systemctl restart logstash.service
+[root@elk-master ~]# systemctl status logstash.service
+
+--terminal 2
+[root@elk-master ~]# /usr/share/logstash/bin/logstash -f /etc/logstash/conf.d/sshd_fail.conf
+
+--terminal 1
+[root@elk-master ~]# curl localhost:9200/_cat/indices?v
+...
+yellow open   sshd_fail-2022.10               ezclhvz4RLS3njwyR-Rl3g   1   1         24            0     79.8kb         79.8kb
+
+[root@elk-master ~]# curl localhost:9200/sshd_fail-2022.10/_search?pretty
+
+-- 여러 계정으로 시도하여 sshd_fail index 정보 확인
+
+[root@ktds ~]# useradd jeff
+[root@ktds ~]# passwd jeff
+[root@ktds ~]# useradd sunny
+[root@ktds ~]# passwd sunny
+
+	
+	# SQL -> 구조적 질의어
+		(table에 질문하는 언어)
+		 ㄴ 행과 열의 집합(행열집합)
+		   ㄴ 행(row=data), 열(colum=structure)
+
+
+
+~]# curl -XPUT http://localhost:9200/books/book/1 -H 'Content-Type: application/json' -d '
+>  {
+>    "title" : "Elasticsearch Beginning",
+>    "author" : "Lee",
+>    "date" : "2022-10-27",
+>    "pages" : 300
+>  }'
+
+[root@elk-master ~]# curl localhost:9200/_cat/indices?v | grep book
+
+[root@elk-master ~]# curl -XGET localhost:9200/books/book/1
+{"_index":"books","_type":"book","_id":"1","_version":1,"_seq_no":0,"_primary_term":1,"found":true,"_source":
+ {
+   "title" : "Elasticsearch Beginning",
+   "author" : "Lee",
+   "date" : "2021-01-14",
+   "pages" : 300
+ }}
+
+[root@elk-master ~]# curl -XGET localhost:9200/books/book/1?pretty
+
+~]# curl -XPUT http://localhost:9200/books/book/1 -H 'Content-Type: application/json' -d '
+ {
+   "title" : "Elasticsearch Beginning",
+   "author" : ["Lee", "Kim"],
+   "date" : "2022-10-27",
+   "pages" : 500
+ }'
+{"_index":"books","_type":"book","_id":"1","_version":2,"result":"updated","_shards":{"total":2,"
+
+~]# curl -XPOST localhost:9200/books/book/1/_update -H 'Content-Type: application/json' -d '
+>  {
+>    "doc" : {
+>      "category" : "ICT"
+>    }
+>  }'
+
+[root@elk-master ~]# curl -XGET localhost:9200/books/book/1?pretty
+
+~]# curl -XPOST localhost:9200/books/book/1/_update -H 'Content-Type: application/json' -d '
+ {
+   "doc" : {
+     "author" : "HYLEE"
+   }
+ }'
+
+[root@elk-master ~]# curl -XGET localhost:9200/books/book/1?pretty
+
+[root@elk-master ~]# curl -XGET localhost:9200/books/_count
+{"count":2,"_shards":{"total":1,"successful":1,"skipped":0,"failed":0}}
+
+[root@elk-master ~]# curl -XGET localhost:9200/books/_search?pretty
+
+[root@elk-master LABs]# curl -XPOST localhost:9200/_bulk -H 'Content-Type: application/json' --data-binary @ktbooks.json
+
+[root@elk-master LABs]# curl -XPOST localhost:9200/_bulk -H 'Content-Type: application/json' --data-binary @ktmagazines.json
+
+[root@elk-master LABs]# curl localhost:9200/_cat/indices?v | grep kt
+
+[root@elk-master LABs]# curl -XGET localhost:9200/ktbooks/_count
+[root@elk-master LABs]# curl -XGET localhost:9200/ktmagazines/_count
+[root@elk-master LABs]# curl -XGET localhost:9200/ktbooks/_search?pretty
+[root@elk-master LABs]# curl -XGET localhost:9200/ktmagazines/_search?pretty
+
+[root@elk-master LABs]# curl -XGET localhost:9200/ktbooks/_search?q=hamlet
+[root@elk-master LABs]# curl -XGET 'localhost:9200/ktbooks/_search?q=hamlet&pretty'
+[root@elk-master LABs]# curl -XGET 'localhost:9200/ktbooks,ktmagazines/_search?q=hamlet&pretty'
+[root@elk-master LABs]# curl -XGET 'localhost:9200/_all/_search?q=time&pretty'
+[root@elk-master LABs]# curl -XGET 'localhost:9200/_search?q=title:time&pretty'
+
+[root@elk-master LABs]# curl localhost:9200/_cat/indices?v | grep shak
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1905  100  1905    0     0  25981      0 --:--:-- --:--:-- --:--:-- 26095
+yellow open   shakespeare                     p483e0SeSEm3D7hgzQtN5Q   1   1      57690            0       13mb           13mb
+
+[root@elk-master LABs]# curl -XGET localhost:9200/shakespeare/_count
+{"count":111396,"_shards":{"total":1,"successful":1,"skipped":0,"failed":0}}
+
+[root@elk-master ~]# vi /etc/elasticsearch/elasticsearch.yml
+[root@elk-master ~]# systemctl restart elasticsearch.service
+[root@elk-master ~]# grep path.repo /etc/elasticsearch/elasticsearch.yml
+[root@elk-master ~]# curl -XGET localhost:9200/_snapshot/_all?pretty
+{ }
+
+~]# curl -XPUT 'http://localhost:9200/_snapshot/agg_exam' -H 'Content-Type: application/json' -d '{
+     "type": "fs",
+     "settings": {
+         "location": "/ELK/data/agg_example",
+         "compress": true
+     }
+ }'
+
+~]# curl -XPUT 'http://localhost:9200/_snapshot/search_exam' -H 'Content-Type: application/json' -d '{
+     "type": "fs",
+     "settings": {
+         "location": "/ELK/data/search_example",
+         "compress": true
+     }
+ }'
+{"acknowledged":true}
+
+[root@elk-master ~]# curl -XGET 'localhost:9200/_snapshot/_all?pretty'                           
+{
+  "agg_exam" : {
+    "type" : "fs",
+...
+
+[root@ktds ~]# curl -XGET 'localhost:9200/_snapshot/agg_exam/_all?pretty'
+
+apache-web-log
+apache-web-log-applied-mapping
+
+[root@ktds ~]# curl -XGET 'localhost:9200/_snapshot/search_exam/_all?pretty'
+
+movie_search
+
+[root@elk-master ~]# curl -XPOST 'localhost:9200/_snapshot/search_exam/_verify'
+[root@elk-master ~]# curl -XPOST 'localhost:9200/_snapshot/agg_exam/_verify'
+
+~]# curl -XPOST "http://localhost:9200/_snapshot/search_exam/movie-search/_restore" -H 'Content-Type: application/json' -d '{
+      "indices": "movie_search",
+      "ignore_unavailable": "true",
+      "include_global_state": false
+  }'
+
+~]# curl -XPOST "http://localhost:9200/_snapshot/agg_exam/default/_restore" -H 'Content-Type: application/json' -d '{
+     "indices": "apache-web-log",
+     "ignore_unavailable": "true",
+     "include_global_state": false
+ }'
+
+~]# curl -XPOST "http://localhost:9200/_snapshot/agg_exam/applied-mapping/_restore" -H 'Content-Type: application/json' -d '{
+     "indices": "apache-web-log-applied-mapping",
+     "ignore_unavailable": "true",
+     "include_global_state": false
+ }'
+
+~]# curl -XGET localhost:9200/_cat/indices?v                                                             [root@elk-master ~]# curl -XGET localhost:9200/apache-web-log/_count
+{"count":7964,"_shards":{"total":5,"successful":4,"skipped":0,"failed":0}}
+[root@elk-master ~]# curl -XGET localhost:9200/apache-web-log-applied-mapping/_count
+{"count":4037,"_shards":{"total":5,"successful":2,"skipped":0,"failed":0}}
+[root@elk-master ~]# curl -XGET localhost:9200/movie_search/_count
+{"count":63069,"_shards":{"total":5,"successful":5,"skipped":0,"failed":0}}
+
+[root@elk-master ~]# /usr/share/elasticsearch/bin/elasticsearch-sql-cli
+sql> show tables;
+sql> describe movie_search;
+sql> select count(*) from movie_search;
+sql> select count(*) from movie_search where prdtYear=2018;
+sql> select movieNm from movie_search where prdtYear=2018;
+          movieNm
+---------------------------
+비밥바룰라
+12 솔져스
+한 솔로: 스타워즈 스토리
+...
+
+
+	[export] ktbooks, ... ---> 이전, 백업, ...
+
+		1) path.repo -> 경로 추가 지정 -> /ELK/data/ktbooks
+		2) restart
+		3) snapshot 등록 -> ktbooks_snap
+		4) /ELK/data/ktbooks
+
+
+[root@elk-master ~]# vi /etc/elasticsearch/elasticsearch.yml
+[root@elk-master ~]# mkdir -p /ELK/data/ktbooks
+[root@elk-master ~]# chown -R elasticsearch.elasticsearch /ELK/data/ktbooks
+[root@elk-master ~]# grep path.repo /etc/elasticsearch/elasticsearch.yml
+[root@elk-master ~]# systemctl restart elasticsearch.service
+[root@elk-master ~]# curl -XGET 'localhost:9200/_snapshot/_all?pretty'
+[root@elk-master ~]# curl -XPUT 'localhost:9200/_snapshot/ktbooks_snap' -H 'Content-Type: application/json' -d '
+> {
+>    "type": "fs",
+>    "settings": {
+>      "compress": true,
+>      "location": "/ELK/data/ktbooks"
+>    }
+> }'
+
+[root@elk-master ~]# curl -XPUT 'localhost:9200/_snapshot/ktbooks_snap/ktbooks_221027' -H 'Content-Type: application/json' -d '
+> {
+>   "indices": "ktbooks",
+>   "ignore_unavailable": true,
+>   "include_global_state": true
+> }'
+
+[root@elk-master ~]# ls -l /ELK/data/ktbooks
+[root@elk-master ~]# tar cvzf ktbooks.tar.gz /ELK/data/ktbooks
+
+[실습] 
+[root@elk-master ~]# curl -XDELETE localhost:9200/shakespeare
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
